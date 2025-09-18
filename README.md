@@ -16,7 +16,7 @@ https://www.jetbrains.com/idea/download/?section=windows
 Далее из командной строки вводим команду git clone https://github.com/em-kstu/hms
 Это склонирует наш репозиторий вам на компьютер.
 
-Установка Postgres по ссылке или можно скачать образ из Docker
+Установка Postgres по ссылке или можно скачать образ из Docker и создаем базу данных hms.
 https://www.youtube.com/watch?v=nxGhGQFk34Y
 после соединяемся с базой данных https://www.youtube.com/watch?v=RAdduEhWMks
 
@@ -61,7 +61,7 @@ https://www.jetbrains.com/idea/download/?section=mac
 git clone https://github.com/em-kstu/hms
 cd hms
 
-Устанавливаем postgres по ссылке или из командной строки.
+Устанавливаем postgres по ссылке или из командной строки и создаем базу данных hms.
 https://www.youtube.com/watch?v=PShGF_udSpk
 
 Открываем проект из ide:
@@ -109,7 +109,7 @@ Copy code
 git clone https://github.com/em-kstu/hms
 cd hms
 
-Скачиваем postgres и создаем базу данных hms по ссылке или из командной строки.
+Скачиваем postgresпо ссылке или из командной строки и создаем базу данных hms .
 https://www.youtube.com/watch?v=UGfteFq_6Co
 
 Следуем инструкции по соединению с базой данных:
