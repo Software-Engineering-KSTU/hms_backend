@@ -2,7 +2,7 @@
 Hospital Management System
 
 Установка и запуск проекта:
-
+______________________________________________________________________________________________________________________
 Если у вас Windows:
 Устанавливаем JDK как на видео:
 https://www.youtube.com/watch?v=FXh0GN1qokY
@@ -16,6 +16,11 @@ https://www.jetbrains.com/idea/download/?section=windows
 Далее из командной строки вводим команду git clone https://github.com/em-kstu/hms
 Это склонирует наш репозиторий вам на компьютер.
 
+После устанавливаем  по ссылке или можно установить Docker образ.
+https://www.youtube.com/watch?v=nxGhGQFk34Y&t=4s
+
+После нужно будет создать базу данных hms
+
 после соединяемся с базой данных https://www.youtube.com/watch?v=RAdduEhWMks
 
 Затем в нашем Ide открыв наш проект мы запускаем его следующими командами, которые нам следует ввести из командной строки:
@@ -23,7 +28,7 @@ cd hospital_management_system
 mvn clean install
 mvn spring-boot:run
 
-
+______________________________________________________________________________________________________________________
 Если у вас MacOS
 Установка JDK
 
@@ -58,6 +63,9 @@ https://www.jetbrains.com/idea/download/?section=mac
 Клонирование репозитория
 git clone https://github.com/em-kstu/hms
 cd hms
+Устанавливаем postgres по ссылке или можно установить через командную строку.
+https://www.youtube.com/watch?v=PShGF_udSpk&t=6s
+После нужно будет создать базу данных hms
 
 Открываем проект из ide:
 Соединение с базой данных
@@ -71,7 +79,7 @@ cd hospital_management_system
 mvn clean install
 mvn spring-boot:run
 
-
+______________________________________________________________________________________________________________________
 Если Ubuntu:
 
 Установка JDK:
@@ -86,30 +94,25 @@ javac -version
 sudo apt install maven -y
 Проверяем Maven:
 
-bash
-Copy code
 mvn -v
 Скачиваем и устанавливаем IntelliJ IDEA с официального сайта:
 https://www.jetbrains.com/idea/download/?section=linux
 
 Или через snap:
 
-bash
-Copy code
 sudo snap install intellij-idea-community --classic
 Клонируем репозиторий и переходим в него:
 
-bash
-Copy code
 git clone https://github.com/em-kstu/hms
-cd hms
-Следуем инструкции по соединению с базой данных:
-https://www.youtube.com/watch?v=RAdduEhWMks
 
+Устанавливаем базу по ссылке https://www.youtube.com/watch?v=UGfteFq_6Co&t=2s или командную строки
+
+После нужно будет создать базу данных hms
+Следуем инструкции по соединению с базой данных:
+
+https://www.youtube.com/watch?v=RAdduEhWMks
 Собираем и запускаем проект:
 
-bash
-Copy code
 cd hospital_management_system
 mvn clean install
 mvn spring-boot:run
