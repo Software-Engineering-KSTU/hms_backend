@@ -1,148 +1,182 @@
-# hms
-Hospital Management System
+Руководство по созданию и настройке Django-проекта с PostgreSQL и .env
+1. Введение
 
-Установка и запуск проекта:
-<<<<<<< HEAD
-__________________________________________________________________________________________________
-=======
-______________________________________________________________________________________________________________________
->>>>>>> main
-Если у вас Windows:
-Устанавливаем JDK как на видео:
-https://www.youtube.com/watch?v=FXh0GN1qokY
+Django — это фреймворк на языке Python, предназначенный для создания веб-приложений.
+Он включает готовые инструменты для работы с моделями, шаблонами, URL-маршрутами и административной панелью.
 
-Затем устанавливаем Maven как на видео:
-https://www.youtube.com/watch?v=YTvlb6eny_0
+Этот документ описывает, как создать проект на Django, подключить базу данных PostgreSQL, использовать файл .env для хранения конфиденциальных данных и подготовить проект к совместной работе нескольких разработчиков.
 
-Затем устанавливаем редактор кода Intellij Idea от JetBreains по следующей ссылке:
-https://www.jetbrains.com/idea/download/?section=windows
+2. PostgreSQL
 
-Далее из командной строки вводим команду git clone https://github.com/em-kstu/hms
-Это склонирует наш репозиторий вам на компьютер.
+PostgreSQL — это реляционная система управления базами данных. Django может использовать её в качестве основного хранилища данных через встроенный драйвер psycopg2-binary.
 
-<<<<<<< HEAD
-Установка Postgres по ссылке или можно скачать образ из Docker и создаем базу данных hms.
-https://www.youtube.com/watch?v=nxGhGQFk34Y
-=======
-После устанавливаем  по ссылке или можно установить Docker образ.
-https://www.youtube.com/watch?v=nxGhGQFk34Y&t=4s
+Для работы проекта необходимо:
 
-После нужно будет создать базу данных hms
+установить PostgreSQL;
+создать базу данных (например, mydatabase);
+знать логин, пароль, хост и порт (обычно localhost:5432).
 
->>>>>>> main
-после соединяемся с базой данных https://www.youtube.com/watch?v=RAdduEhWMks
+3. Файл .env
 
-Затем в нашем Ide открыв наш проект мы запускаем его следующими командами, которые нам следует ввести из командной строки:
-cd hospital_management_system
-mvn clean install
-mvn spring-boot:run
+Файл .env используется для хранения конфиденциальных данных, которые не должны попадать в репозиторий.
+В него выносятся такие параметры, как:
 
-<<<<<<< HEAD
-___________________________________________________________________________________________________
-=======
-______________________________________________________________________________________________________________________
->>>>>>> main
-Если у вас MacOS
-
-Установка JDK
-Через Homebrew:
-
-brew update
-brew install openjdk@21
+DEBUG=True
+SECRET_KEY=замени_на_уникальный_ключ
+DB_NAME=mydatabase
+DB_USER=postgres
+DB_PASSWORD=пароль
+DB_HOST=localhost
+DB_PORT=5432
 
 
-Добавляем в переменные окружения:
+Django подключается к этому файлу через библиотеку python-dotenv.
 
-echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 21)' >> ~/.zshrc
-echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.zshrc
-source ~/.zshrc
+4. Зависимости проекта
+
+Для работы проекта используются следующие библиотеки:
+
+Django — фреймворк для веб-приложений
+psycopg2-binary — драйвер для работы с PostgreSQL
+python-dotenv — библиотека для загрузки переменных из .env
+
+Все зависимости фиксируются в файле requirements.txt, чтобы проект можно было воспроизвести на другой машине.
+
+5. Виртуальное окружение
+
+Виртуальное окружение (venv) позволяет изолировать зависимости проекта от системных библиотек Python.
+Оно создаётся один раз для каждого проекта и активируется перед запуском или установкой пакетов.
+
+Команды для создания и активации окружения:
+
+Windows
+python -m venv venv
+venv\Scripts\activate
+
+Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
 
 
-Проверка:
-java -version
+После активации в начале командной строки появится префикс (venv).
 
-Установка Maven
-brew install maven
+6. Клонирование проекта
 
-Проверка:
+Чтобы развернуть проект, необходимо склонировать репозиторий из Git:
 
-mvn -v
+git clone https://github.com/username/projectname.git
+cd projectname
 
-Установка IDE (IntelliJ IDEA)
 
-Скачиваем с официального сайта:
-https://www.jetbrains.com/idea/download/?section=mac
+Адрес репозитория меняется в зависимости от реального проекта.
 
-Клонирование репозитория
-git clone https://github.com/em-kstu/hms
-cd hms
-Устанавливаем postgres по ссылке или можно установить через командную строку.
-https://www.youtube.com/watch?v=PShGF_udSpk&t=6s
-После нужно будет создать базу данных hms
+7. Настройка проекта после клонирования
 
-Устанавливаем postgres по ссылке или из командной строки и создаем базу данных hms.
-https://www.youtube.com/watch?v=PShGF_udSpk
+После того как проект загружен на компьютер, необходимо выполнить несколько шагов для его запуска.
 
-Открываем проект из ide:
-Соединение с базой данных
-Следуем инструкции из видео:
-https://www.youtube.com/watch?v=RAdduEhWMks
+7.1 Создать и активировать виртуальное окружение
+Windows
+python -m venv venv
+venv\Scripts\activate
 
-Сборка и запуск проекта
-В терминале:
+Linux / macOS
+python3 -m venv venv
+source venv/bin/activate
 
-cd hospital_management_system
-mvn clean install
-mvn spring-boot:run
+7.2 Установить зависимости
+Windows
+pip install -r requirements.txt
 
-<<<<<<< HEAD
-____________________________________________________________________________________________________
-=======
-______________________________________________________________________________________________________________________
->>>>>>> main
-Если Ubuntu:
+Linux / macOS
+pip3 install -r requirements.txt
 
-Установка JDK:
-sudo apt update
-sudo apt install openjdk-21-jdk -y
+7.3 Создать файл .env
 
-Проверяем установку:
-java -version
-javac -version
+В корне проекта необходимо создать файл .env.
+Если в репозитории есть пример (.env.example), можно скопировать его:
 
-Устанавливаем Maven:
-sudo apt install maven -y
-Проверяем Maven:
+cp .env.example .env
 
-mvn -v
-Скачиваем и устанавливаем IntelliJ IDEA с официального сайта:
-https://www.jetbrains.com/idea/download/?section=linux
 
-Или через snap:
+В этом файле указываются ваши параметры базы данных и ключи:
 
-sudo snap install intellij-idea-community --classic
-Клонируем репозиторий и переходим в него:
+DEBUG=True
+SECRET_KEY=новый_секретный_ключ
+DB_NAME=имя_вашей_базы
+DB_USER=пользователь_postgres
+DB_PASSWORD=пароль_postgres
+DB_HOST=localhost
+DB_PORT=5432
 
-git clone https://github.com/em-kstu/hms
-<<<<<<< HEAD
-cd hms
 
-Скачиваем postgresпо ссылке или из командной строки и создаем базу данных hms .
-https://www.youtube.com/watch?v=UGfteFq_6Co
+Если у вас другая база данных или пароль — просто укажите свои значения.
 
-Следуем инструкции по соединению с базой данных:
-https://www.youtube.com/watch?v=RAdduEhWMks
-=======
->>>>>>> main
+7.4 Настроить подключение к базе данных
 
-Устанавливаем базу по ссылке https://www.youtube.com/watch?v=UGfteFq_6Co&t=2s или командную строки
+В файле core/settings.py должно быть подключение к .env и PostgreSQL:
 
-После нужно будет создать базу данных hms
-Следуем инструкции по соединению с базой данных:
+import os
+from dotenv import load_dotenv
 
-https://www.youtube.com/watch?v=RAdduEhWMks
-Собираем и запускаем проект:
+load_dotenv()
 
-cd hospital_management_system
-mvn clean install
-mvn spring-boot:run
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "True"
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+    }
+}
+
+7.5 Применить миграции
+
+Миграции создают таблицы в вашей базе данных.
+
+Windows
+python manage.py makemigrations
+python manage.py migrate
+
+Linux / macOS
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+7.6 Создать суперпользователя (для доступа в /admin)
+Windows
+python manage.py createsuperuser
+
+Linux / macOS
+python3 manage.py createsuperuser
+
+7.7 Запустить сервер разработки
+Windows
+python manage.py runserver
+
+Linux / macOS
+python3 manage.py runserver
+
+
+После запуска проект будет доступен по адресу:
+
+http://127.0.0.1:8000/
+
+8. Обновление зависимостей
+
+Если в проекте были добавлены новые библиотеки, их можно зафиксировать в файле requirements.txt:
+
+pip freeze > requirements.txt
+
+9. .gitignore
+
+Чтобы не добавлять в репозиторий служебные файлы, создайте файл .gitignore со следующим содержимым:
+
+venv/
+__pycache__/
+*.pyc
+*.sqlite3
+.env
