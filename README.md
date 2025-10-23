@@ -1,3 +1,6 @@
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/1f3c4ec7-e8a1-4547-91de-a28480aa564b" />
+
+
 Руководство по созданию и настройке Django-проекта с PostgreSQL и .env
 1. Введение
 
