@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
 
 # Загружаем переменные окружения из .env
 load_dotenv()
@@ -22,11 +23,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Твои приложения
+    'rest_framework',
+    'rest_framework_simplejwt',
+
+    #приложения
     'users',
     'departments',
     'staff',
     'patients',
+    'specializations',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +63,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 # Настройки базы данных из .env
 DATABASES = {
@@ -97,3 +108,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Настройка пользовательской модели, если она есть
 AUTH_USER_MODEL = 'users.User'
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+}
