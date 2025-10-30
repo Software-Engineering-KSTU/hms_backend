@@ -1,0 +1,10 @@
+# SECRET_KEY=''
+# DEBUG=True
+# ALLOWED_HOSTS=127.0.0.1,localhost
+
+# DB_ENGINE=django.db.backends.postgresql
+# DB_NAME=localhost
+# DB_USER=genma
+# DB_PASSWORD=dastan150505
+# DB_HOST=localhost
+# DB_PORT=5432

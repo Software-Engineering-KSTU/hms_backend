@@ -1,0 +1,30 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py.class
+
+# === Virtual environment ===
+venv/
+env/
+.venv/
+ENV/
+
+# === Environment variables ===
+.env
+
+# === Django / SQLite ===
+db.sqlite3
+*.log
+
+# === VSCode / PyCharm ===
+.vscode/
+.idea/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === Migrations cache ===
+*/migrations/__pycache__/
