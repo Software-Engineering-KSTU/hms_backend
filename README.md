@@ -1,110 +1,183 @@
-Руководство по созданию и настройке Django-проекта с PostgreSQL и .env
+<img width="1280" height="720" alt="image" src="https://github.com/user-attachments/assets/1f3c4ec7-e8a1-4547-91de-a28480aa564b" />
 
-Введение
-Django — это фреймворк на языке Python, предназначенный для создания веб-приложений. Он включает готовые инструменты для работы с моделями, шаблонами, URL-маршрутами и административной панелью.
+# Руководство по Настройке Проекта Django + PostgreSQL
 
-Этот документ описывает, как создать проект на Django, подключить базу данных PostgreSQL, использовать файл .env для хранения конфиденциальных данных и подготовить проект к совместной работе нескольких разработчиков.
+## Введение
+**Django** — это высокоуровневый веб-фреймворк на языке Python, который поощряет быструю разработку и чистый, прагматичный дизайн. Он включает готовые инструменты для работы с моделями (ORM), шаблонами, URL-маршрутами и административной панелью.
 
-PostgreSQL
-PostgreSQL — это реляционная система управления базами данных. Django может использовать её в качестве основного хранилища данных через встроенный драйвер psycopg2-binary.
+**PostgreSQ** — это мощная, открытая, объектно-реляционная система управления базами данных. Django использует её как основное хранилище данных через драйвер `psycopg2-binary`.
 
-Для работы проекта необходимо:
+Этот документ подробно описывает процесс:
 
-установить PostgreSQL; создать базу данных (например, mydatabase); знать логин, пароль, хост и порт (обычно localhost:5432).
+- Создания проекта на Django.
 
-Файл .env
-Файл .env используется для хранения конфиденциальных данных, которые не должны попадать в репозиторий. В него выносятся такие параметры, как:
+- Подключения реляционной базы данных PostgreSQL.
 
-DEBUG=True SECRET_KEY=замени_на_уникальный_ключ DB_NAME=mydatabase DB_USER=postgres DB_PASSWORD=пароль DB_HOST=localhost DB_PORT=5432
+- Использования файла .env для хранения конфиденциальных данных.
 
-Django подключается к этому файлу через библиотеку python-dotenv.
+- Подготовки проекта к совместной работе нескольких разработчиков.
 
-Зависимости проекта
-Для работы проекта используются следующие библиотеки:
+## 1. Требования:
 
-Django — фреймворк для веб-приложений psycopg2-binary — драйвер для работы с PostgreSQL python-dotenv — библиотека для загрузки переменных из .env
+- Для работы проекта необходимо:
 
-Все зависимости фиксируются в файле requirements.txt, чтобы проект можно было воспроизвести на другой машине.
+- Установить и настроить PostgreSQL.
 
-Виртуальное окружение
-Виртуальное окружение (venv) позволяет изолировать зависимости проекта от системных библиотек Python. Оно создаётся один раз для каждого проекта и активируется перед запуском или установкой пакетов.
+- Создать базу данных, например mydatabase.
 
-Команды для создания и активации окружения:
+- Запомните параметры подключения: логин, пароль, хост и порт (обычно localhost:5432).
 
-Windows python -m venv venv venv\Scripts\activate
+## 2. Файл .env (Конфиденциальные Данные)
+Файл .env используется для хранения конфиденциальных данных, которые не должны попадать в систему контроля версий (Git).
 
-Linux / macOS python3 -m venv venv source venv/bin/activate
+Пример содержимого файла .env:
 
-После активации в начале командной строки появится префикс (venv).
+```
+DEBUG=True
+SECRET_KEY=замени_на_уникальный_ключ
+### Параметры подключения к БД
+DB_NAME=mydatabase
+DB_USER=postgres
+DB_PASSWORD=пароль
+DB_HOST=localhost
+DB_PORT=5432
+``` 
 
-Клонирование проекта
-Чтобы развернуть проект, необходимо склонировать репозиторий из Git:
+Django подключается к этому файлу через библиотеку python-dotenv для динамической загрузки переменных окружения.
 
-git clone https://github.com/username/projectname.git cd projectname
+## 3. Зависимости Проекта (requirements.txt)
 
-Адрес репозитория меняется в зависимости от реального проекта.
+Все необходимые для работы проекта библиотеки фиксируются в файле **requirements.txt**. Это гарантирует, что проект можно будет воспроизвести запустить на любой другом компьютеру.
 
-Настройка проекта после клонирования
-После того как проект загружен на компьютер, необходимо выполнить несколько шагов для его запуска.
+| Библиотека | Назначение |
+| :--- | :--- |
+| Django | `Основной веб-фреймворк` |
+| Lpsycopg2-binary | `Драйвер для работы с PostgreSQL` |
+| python-dotenv | `Загрузка переменных из файла .env` |
 
-7.1 Создать и активировать виртуальное окружение Windows python -m venv venv venv\Scripts\activate
+## 4. Виртуальное Окружение (venv)
 
-Linux / macOS python3 -m venv venv source venv/bin/activate
+Виртуальное окружение (venv) позволяет изолировать зависимости проекта от системных библиотек Python, избегая конфликтов. Оно создаётся один раз для проекта и активируется перед началом работы.
 
-7.2 Установить зависимости Windows pip install -r requirements.txt
+Команды для создания и активации:
 
-Linux / macOS pip3 install -r requirements.txt
+| Операционная система | Команда для создания | Команда для активации |
+| :--- | :--- | :--- |
+| **Windows** | `python -m venv venv` | `venv\Scripts\activate` |
+| **Linux / macOS** | `python3 -m venv venv` | `source venv/bin/activate` |
 
-7.3 Создать файл .env
+## 5. Клонирование Проекта
 
-В корне проекта необходимо создать файл .env. Если в репозитории есть пример (.env.example), можно скопировать его:
+Для получения исходного кода проекта с Git выполните следующие команды в консоле проекта:
 
+```
+git clone https://github.com/username/projectname.git
+cd projectname
+```
+⚠️ Замените `https://github.com/username/projectname.git` на фактический адрес репозитория.
+
+## 6. Настройка и Запуск Проекта
+
+После клонирования проекта необходимо выполнить несколько шагов для его успешного запуска.
+
+### 6.1. Установка Зависимостей
+
+Установите все библиотеки, перечисленные в requirements.txt:
+
+| Операционная система | Команда |
+| :--- | :--- |
+| **Windows** | `pip install -r requirements.txt` |
+| **Linux / macOS** | `pip3 install -r requirements.txt` |
+
+### 6.2. Создание Файла `.env`
+
+В корневой директории проекта создайте файл с именем `.env.` Если в репозитории есть пример `(.env.example)`, скопируйте его и измените значения:
+
+```
 cp .env.example .env
+```
 
-В этом файле указываются ваши параметры базы данных и ключи:
+⚠️ Обязательно заполните его своими уникальными параметрами подключения к PostgreSQL:
 
-DEBUG=True SECRET_KEY=новый_секретный_ключ DB_NAME=имя_вашей_базы DB_USER=пользователь_postgres DB_PASSWORD=пароль_postgres DB_HOST=localhost DB_PORT=5432
+```
+DEBUG=True
+SECRET_KEY=новый_секретный_ключ # Уникальный ключ
+DB_NAME=имя_вашей_базы
+DB_USER=пользователь_postgres
+DB_PASSWORD=пароль_postgres
+DB_HOST=localhost
+DB_PORT=5432
+```
+### 6.3. Настройка Подключения к Базе Данных (в core/settings.py)
 
-Если у вас другая база данных или пароль — просто укажите свои значения.
+Убедитесь, что ваш файл `core/settings.py` содержит код для загрузки переменных из `.env` и настройки `DATABASES`:
 
-7.4 Настроить подключение к базе данных
+Python code:
+```
+import os
+from dotenv import load_dotenv
+```
 
-В файле core/settings.py должно быть подключение к .env и PostgreSQL:
+Загружаем переменные из `.env` load_dotenv()
 
-import os from dotenv import load_dotenv
+Python code:
+```
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG") == "True"
 
-load_dotenv()
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+    }
+}
+```
+### 6.4. Применение Миграций
 
-SECRET_KEY = os.getenv("SECRET_KEY") DEBUG = os.getenv("DEBUG") == "True"
+Примените миграции, чтобы создать все необходимые таблицы в вашей базе данных:
 
-DATABASES = { 'default': { 'ENGINE': 'django.db.backends.postgresql', 'NAME': os.getenv("DB_NAME"), 'USER': os.getenv("DB_USER"), 'PASSWORD': os.getenv("DB_PASSWORD"), 'HOST': os.getenv("DB_HOST"), 'PORT': os.getenv("DB_PORT"), } }
+| Операционная система | Команда |
+| :--- | :--- |
+| **Windows** | `python manage.py makemigrations`<br>`python manage.py migrate`|
+| **Linux / macOS** | `python3 manage.py makemigrations`<br>`python3 manage.py migrate`|
 
-7.5 Применить миграции
+### 6.5. Создание Суперпользователя
 
-Миграции создают таблицы в вашей базе данных.
+Создайте администратора для доступа к /admin панели:
 
-Windows python manage.py makemigrations python manage.py migrate
+| Операционная система | Команда |
+| :--- | :--- |
+| **Windows** | `python manage.py createsuperuser`|
+| **Linux / macOS** | `python3 manage.py createsuperuser`|
 
-Linux / macOS python3 manage.py makemigrations python3 manage.py migrate
+### 6.6. Запуск Сервера Разработки
 
-7.6 Создать суперпользователя (для доступа в /admin) Windows python manage.py createsuperuser
+Запустите локальный сервер Django:
 
-Linux / macOS python3 manage.py createsuperuser
+| Операционная система | Команда |
+| :--- | :--- |
+| **Windows** | `python manage.py runserver`|
+| **Linux / macOS** | `python3 manage.py runserver`|
 
-7.7 Запустить сервер разработки Windows python manage.py runserver
+Проект будет доступен по адресу `http://127.0.0.1:8000/`
 
-Linux / macOS python3 manage.py runserver
+## 7. Обновление Зависимостей
+Если вы добавили новые библиотеки в проект, их нужно зафиксировать в requirements.txt:
 
-После запуска проект будет доступен по адресу:
-
-http://127.0.0.1:8000/
-
-Обновление зависимостей
-Если в проекте были добавлены новые библиотеки, их можно зафиксировать в файле requirements.txt:
-
+```
 pip freeze > requirements.txt
+```
 
-.gitignore
-Чтобы не добавлять в репозиторий служебные файлы, создайте файл .gitignore со следующим содержимым:
-
-venv/ pycache/ *.pyc *.sqlite3 .env
+## 8. .gitignore
+Чтобы избежать попадания служебных и конфиденциальных файлов в репозиторий, используйте файл `.gitignore` со следующим содержимым:
+```
+venv/
+__pycache__/
+*.pyc
+*.sqlite3
+.env
+```
