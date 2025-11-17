@@ -1,11 +1,10 @@
-package org.example.backendjava.booking_to_doctore_service.model.entity;
+package org.example.backendjava.autth_service.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.backendjava.autth_service.model.entity.User;
 
 import java.time.LocalDate;
 
@@ -25,6 +24,7 @@ public class Patient {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private LocalDate dateOfBirth;
-    private String insuranceNumber;
+    private String phoneNumber;
+    private String address;
+    private LocalDate birthDate;
 }

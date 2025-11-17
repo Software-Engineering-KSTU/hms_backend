@@ -3,7 +3,7 @@ spring:
     name:
       backend-java
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/bank_rest}
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/hms}
     username: ${DATASOURCE_USERNAME:postgres}
     password: ${DATASOURCE_PASSWORD:postgres}
     driver-class-name: ${DATASOURCE_DRIVER:org.postgresql.Driver}

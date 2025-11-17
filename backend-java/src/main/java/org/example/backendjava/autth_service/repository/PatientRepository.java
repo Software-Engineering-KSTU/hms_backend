@@ -1,6 +1,6 @@
-package org.example.backendjava.booking_to_doctore_service.repository;
+package org.example.backendjava.autth_service.repository;
 
-import org.example.backendjava.booking_to_doctore_service.model.entity.Patient;
+import org.example.backendjava.autth_service.model.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

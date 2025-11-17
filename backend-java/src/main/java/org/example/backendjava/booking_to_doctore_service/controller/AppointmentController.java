@@ -31,4 +31,5 @@ public class AppointmentController {
     public List<Appointment> getPatientAppointments(@PathVariable Long id) {
         return appointmentService.getAppointmentsForPatient(id);
     }
+
 }

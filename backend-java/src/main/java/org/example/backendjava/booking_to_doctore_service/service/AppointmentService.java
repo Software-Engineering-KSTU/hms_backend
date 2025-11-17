@@ -3,11 +3,11 @@ package org.example.backendjava.booking_to_doctore_service.service;
 import lombok.RequiredArgsConstructor;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
-import org.example.backendjava.booking_to_doctore_service.model.entity.Doctor;
-import org.example.backendjava.booking_to_doctore_service.model.entity.Patient;
+import org.example.backendjava.autth_service.model.entity.Doctor;
+import org.example.backendjava.autth_service.model.entity.Patient;
 import org.example.backendjava.booking_to_doctore_service.repository.AppointmentRepository;
-import org.example.backendjava.booking_to_doctore_service.repository.DoctorRepository;
-import org.example.backendjava.booking_to_doctore_service.repository.PatientRepository;
+import org.example.backendjava.autth_service.repository.DoctorRepository;
+import org.example.backendjava.autth_service.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

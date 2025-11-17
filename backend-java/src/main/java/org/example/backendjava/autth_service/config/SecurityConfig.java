@@ -46,7 +46,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/transactions/**").authenticated()
                         .requestMatchers("/api/cards/my/**").authenticated()
 
-                        .anyRequest().authenticated()
+
+                        .anyRequest().permitAll()
                 )
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session

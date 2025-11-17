@@ -1,11 +1,12 @@
-package org.example.backendjava.booking_to_doctore_service.model.entity;
+package org.example.backendjava.autth_service.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.backendjava.autth_service.model.entity.User;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "doctors")
@@ -22,8 +23,8 @@ public class Doctor {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
     private String specialization;
-    private String officeNumber;
+    private String phoneNumber;
+    private LocalDate birthDate;
 }
 

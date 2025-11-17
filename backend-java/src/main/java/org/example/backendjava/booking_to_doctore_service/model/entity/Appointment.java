@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.backendjava.autth_service.model.entity.Doctor;
+import org.example.backendjava.autth_service.model.entity.Patient;
 
 import java.time.LocalDateTime;
 

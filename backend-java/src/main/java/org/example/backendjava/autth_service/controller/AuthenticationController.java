@@ -3,9 +3,7 @@ package org.example.backendjava.autth_service.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.backendjava.autth_service.model.dto.AuthResponse;
-import org.example.backendjava.autth_service.model.dto.TokenResponseDto;
-import org.example.backendjava.autth_service.model.dto.UserRequestDto;
+import org.example.backendjava.autth_service.model.dto.*;
 import org.example.backendjava.autth_service.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +29,14 @@ public class AuthenticationController {
      * @param request объект {@link UserRequestDto}, содержащий данные пользователя (логин, пароль и т.д.)
      * @return объект {@link AuthResponse} с JWT-токеном и информацией о пользователе
      */
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody UserRequestDto request) {
-        return ResponseEntity.ok(authenticationService.register(request));
+    @PostMapping("/patient-register")
+    public ResponseEntity<AuthResponse> patientRegistration(@Valid @RequestBody PatientRequestDto request) {
+        return ResponseEntity.ok(authenticationService.patientRegister(request));
+    }
+
+    @PostMapping("/doctor-register")
+    public ResponseEntity<AuthResponse> doctorRegistration(@Valid @RequestBody DoctorRequestDto request) {
+        return ResponseEntity.ok(authenticationService.doctorRegister(request));
     }
 
     /**
