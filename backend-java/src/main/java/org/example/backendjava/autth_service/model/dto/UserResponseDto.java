@@ -1,15 +1,9 @@
 package org.example.backendjava.autth_service.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.backendjava.autth_service.model.entity.Role;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class UserResponseDto {
     private Long id;
     private String username;

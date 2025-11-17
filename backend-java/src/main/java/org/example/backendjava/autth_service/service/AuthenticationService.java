@@ -99,7 +99,7 @@ public class AuthenticationService {
      * @return AuthResponse с новыми access и refresh токенами
      * @throws UserNotFoundException если пользователь с указанным username не найден
      */
-    public AuthResponse authenticate(UserRequestDto request) {
+    public AuthResponse authenticate(LoginRequestDto request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
@@ -120,9 +120,9 @@ public class AuthenticationService {
      * Обновляет access и refresh токены с использованием refresh токена.
      *
      * @param request HTTP запрос с заголовком Authorization: Bearer <refreshToken>
-     * @return ResponseEntity с новым TokenResponseDto или UNAUTHORIZED, если токен некорректный
+     * @return ResponseEntity с новым AuthResponse или UNAUTHORIZED, если токен некорректный
      */
-    public ResponseEntity<TokenResponseDto> refresh(HttpServletRequest request) {
+    public ResponseEntity<AuthResponse> refresh(HttpServletRequest request) {
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -141,7 +141,7 @@ public class AuthenticationService {
             revokeAllTokenByUser(user);
             saveUserToken(accessToken, user);
 
-            TokenResponseDto response = new TokenResponseDto(accessToken, refreshToken);
+            AuthResponse response = new AuthResponse(accessToken, refreshToken);
             return ResponseEntity.ok(response);
         }
 

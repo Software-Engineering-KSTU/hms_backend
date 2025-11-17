@@ -46,7 +46,7 @@ public class AuthenticationController {
      * @return объект {@link AuthResponse} с JWT-токеном и информацией о пользователе
      */
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody UserRequestDto request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequestDto request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
@@ -54,10 +54,10 @@ public class AuthenticationController {
      * Обновляет JWT-токен пользователя.
      *
      * @param request HTTP-запрос с текущим токеном
-     * @return объект {@link TokenResponseDto} с новым токеном
+     * @return объект {@link AuthResponse} с новым токеном
      */
     @PostMapping("/refresh-token")
-    public ResponseEntity<TokenResponseDto> refreshToken(HttpServletRequest request) {
+    public ResponseEntity<AuthResponse> refreshToken(HttpServletRequest request) {
         return authenticationService.refresh(request);
     }
 }
