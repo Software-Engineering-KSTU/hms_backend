@@ -36,18 +36,17 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/api/auth/**", "/swagger-ui/index.html", "/v3/api-docs/**",
+                        .requestMatchers("/api/auth/patient-register","/api/auth/login", "/swagger-ui/index.html", "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html", "/docs/openapi.yml").permitAll()
                         .requestMatchers("/api/users/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/blocking/**").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/auth/doctor-register").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/blocking/request").authenticated()
                         .requestMatchers("/api/transactions/**").authenticated()
                         .requestMatchers("/api/cards/my/**").authenticated()
-
-
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session

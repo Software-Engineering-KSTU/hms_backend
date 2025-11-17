@@ -42,15 +42,4 @@ public class UserController {
         return ResponseEntity.ok(userService.findUser(id));
     }
 
-    /**
-     * Обновляет данные существующего пользователя.
-     *
-     * @param id   идентификатор пользователя, которого нужно обновить
-     * @param user объект {@link UserRequestDto} с новыми данными пользователя
-     * @return объект {@link UserResponseDto} с обновлённой информацией о пользователе
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserRequestDto user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
-    }
 }
