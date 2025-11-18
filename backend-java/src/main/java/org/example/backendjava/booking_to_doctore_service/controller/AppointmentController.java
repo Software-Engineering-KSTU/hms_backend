@@ -2,19 +2,22 @@ package org.example.backendjava.booking_to_doctore_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.booking_to_doctore_service.service.AppointmentService;
+import org.example.backendjava.booking_to_doctore_service.service.DoctorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/appointments")
-@RequiredArgsConstructor
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerAppointment(@RequestBody AppointmentRequestDto dto) {
@@ -30,6 +33,11 @@ public class AppointmentController {
     @GetMapping("/patient/{id}")
     public List<Appointment> getPatientAppointments(@PathVariable Long id) {
         return appointmentService.getAppointmentsForPatient(id);
+    }
+
+    @GetMapping("/doctors")
+    public List<DoctorResponseDto> getDoctorAppointments() {
+        return doctorService.findAllDoctors();
     }
 
 }

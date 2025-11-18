@@ -14,6 +14,6 @@ server:
   port: ${SERVER_PORT:8080}
 security:
   jwt:
-    secret-key: ${JWT_SECRET_KEY:bb881451354ad90b161deb433b52a964ec4cd34db010d24f3e116136ab734e8a}
+    secret-key: bb881451354ad90b161deb433b52a964ec4cd34db010d24f3e116136ab734e8a
     access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:900000}
     refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:604800000}

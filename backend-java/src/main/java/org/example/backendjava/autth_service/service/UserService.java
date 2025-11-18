@@ -46,4 +46,8 @@ public class UserService {
                 .toList();
     }
 
+    public Long findUserIdByUsername(String username) {
+        return userRepository.findIdByUsername(username);
+    }
+
 }

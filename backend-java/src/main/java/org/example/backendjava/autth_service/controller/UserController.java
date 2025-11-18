@@ -1,7 +1,6 @@
 package org.example.backendjava.autth_service.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backendjava.autth_service.model.dto.UserRequestDto;
 import org.example.backendjava.autth_service.model.dto.UserResponseDto;
 import org.example.backendjava.autth_service.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -42,4 +41,8 @@ public class UserController {
         return ResponseEntity.ok(userService.findUser(id));
     }
 
+    @GetMapping("/find-id/{username}")
+    public ResponseEntity<Long> findIdByUsername(@PathVariable String username) {
+        return ResponseEntity.ok(userService.findUserIdByUsername(username));
+    }
 }
