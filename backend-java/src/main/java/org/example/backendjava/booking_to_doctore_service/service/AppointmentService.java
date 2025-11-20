@@ -1,9 +1,6 @@
 package org.example.backendjava.booking_to_doctore_service.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backendjava.booking_to_doctore_service.exception.DoctorAlreadyBookedException;
-import org.example.backendjava.booking_to_doctore_service.exception.DoctorNotFoundException;
-import org.example.backendjava.booking_to_doctore_service.exception.PatientNotFoundException;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.autth_service.model.entity.Doctor;
@@ -26,13 +23,13 @@ public class AppointmentService {
     public Appointment registerAppointment(AppointmentRequestDto dto) {
 
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
-                .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + dto.getDoctorId() + " not found"));
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
 
         Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new PatientNotFoundException("Patient with id: " + dto.getPatientId() + " not found"));
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
 
         if (appointmentRepository.existsByDoctorIdAndDateTime(doctor.getId(), dto.getDateTime())) {
-            throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + dto.getDateTime());
+            throw new RuntimeException("Doctor is already booked at this time");
         }
 
         Appointment appointment = new Appointment();
