@@ -7,6 +7,7 @@ import org.example.backendjava.autth_service.model.entity.Role;
 import org.example.backendjava.autth_service.model.entity.Token;
 import org.example.backendjava.autth_service.model.entity.User;
 import org.example.backendjava.autth_service.mapper.UserMapper;
+import org.example.backendjava.autth_service.repository.DoctorRepository;
 import org.example.backendjava.autth_service.repository.PatientRepository;
 import org.example.backendjava.autth_service.repository.TokenRepository;
 import org.example.backendjava.autth_service.repository.UserRepository;
@@ -42,9 +43,8 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PatientRepository patientRepository;
-
+    private final DoctorRepository doctorRepository;
     /**
      * Регистрирует нового пользователя.
      * Проверяет, что username и email уникальны.
@@ -88,6 +88,7 @@ public class AuthenticationService {
         doctor.setPhoneNumber(request.getPhoneNumber());
         doctor.setBirthDate(request.getDateOfBirth());
         doctor.setPhoneNumber(request.getPhoneNumber());
+        doctorRepository.save(doctor);
         return saveTokenAndgetAuthResponse(user);
     }
 
