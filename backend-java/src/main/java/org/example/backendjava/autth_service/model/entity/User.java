@@ -35,6 +35,10 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @OneToOne
+    @JoinColumn(name = "patient_id")
+    private transient Patient patient;
+
     @OneToMany(mappedBy = "user")
     private transient List<Token> tokens;
 

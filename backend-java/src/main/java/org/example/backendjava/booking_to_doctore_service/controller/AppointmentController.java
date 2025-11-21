@@ -2,6 +2,7 @@ package org.example.backendjava.booking_to_doctore_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.booking_to_doctore_service.service.AppointmentService;
@@ -26,7 +27,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{id}")
-    public List<Appointment> getDoctorAppointments(@PathVariable Long id) {
+    public List<DoctorAppiontmentResponseDto> getDoctorAppointments(@PathVariable Long id) {
         return appointmentService.getAppointmentsForDoctor(id);
     }
 
