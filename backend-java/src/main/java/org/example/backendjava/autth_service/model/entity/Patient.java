@@ -22,7 +22,7 @@ public class Patient {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user; // УБИРАЕМ transient, чтобы можно было получить username
 
     private String phoneNumber;
     private String address;

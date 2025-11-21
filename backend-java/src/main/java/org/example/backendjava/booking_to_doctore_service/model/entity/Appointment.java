@@ -10,6 +10,10 @@ import org.example.backendjava.autth_service.model.entity.Patient;
 
 import java.time.LocalDateTime;
 
+/**
+ * Сущность записи к врачу.
+ * Связывает пациента, врача и время приема.
+ */
 @Entity
 @Table(name = "appointments")
 @Getter
@@ -22,15 +26,32 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Врач, к которому записан пациент.
+     */
     @ManyToOne
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
+    /**
+     * Пациент, который записался.
+     */
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
 
+    /**
+     * Дата и время приема.
+     */
     private LocalDateTime dateTime;
 
-    private String status;
+    /**
+     * Текущий статус пациента и информация о его состоянии.
+     * OneToOne - одна запись связана с одним статусом.
+     * cascade = CascadeType.ALL - при сохранении записи автоматически сохраняется статус.
+     * orphanRemoval = true - при удалении записи удаляется и статус.
+     */
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "current_patient_status_id")
+    private CurrentPatientStatus currentPatientStatus;
 }

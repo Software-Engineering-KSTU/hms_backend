@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class PatientResponseDto {
     private Long id;
+    private String username; // Добавляем имя пользователя
     private String phoneNumber;
     private String address;
     private LocalDate birthDate;
