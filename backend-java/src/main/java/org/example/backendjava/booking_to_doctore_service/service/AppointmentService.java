@@ -77,4 +77,30 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsForPatient(Long patientId) {
         return appointmentRepository.findByPatientId(patientId);
     }
+
+    /**
+     * Обновляет статус записи к врачу.
+     * Доступно только врачам.
+     *
+     * @param appointmentId ID записи
+     * @param newStatus новый статус
+     * @return обновлённая информация о записи
+     */
+    public DoctorAppiontmentResponseDto updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus) {
+        // Находим запись по ID
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
+
+        // Получаем текущий статус пациента
+        CurrentPatientStatus currentStatus = appointment.getCurrentPatientStatus();
+
+        // Обновляем статус
+        currentStatus.setStatus(newStatus);
+
+        // Сохраняем изменения
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        // Возвращаем обновлённую информацию
+        return appointmentMapper.toDto(savedAppointment);
+    }
 }
