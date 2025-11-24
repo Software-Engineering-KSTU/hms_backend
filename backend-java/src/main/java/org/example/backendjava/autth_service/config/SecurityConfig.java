@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/transactions/**").authenticated()
                         .requestMatchers("/api/cards/my/**").authenticated()
                         .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/api/appointments/*/status").hasAuthority(Role.DOCTOR.name())
                         .requestMatchers("api/appointments/**").authenticated()
                         .anyRequest().permitAll()
                 )
