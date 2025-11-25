@@ -1,33 +1,16 @@
+// auth_service/src/main/java/org/example/backendjava/auth_service/model/dto/DoctorResumeDto.java
+
 package org.example.backendjava.auth_service.model.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class DoctorResumeDto {
-
-    private Long id;
-
-    private String username;
-
-    private String specialization;
-
-    private String phoneNumber;
-
-    private LocalDate birthDate;
-
+    private String aboutMe;
     private Integer experienceYears;
-
+    private Integer age;
+    private String educationJson;
     private String photoUrl;
-
-    private String educationDescription;
-
-    private String diplomaPhotoUrl;
-
-    private String additionalInfo;
+    private String fullName;
+    private String specialization;
 }
