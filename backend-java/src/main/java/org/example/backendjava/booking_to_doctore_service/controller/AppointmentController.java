@@ -34,17 +34,10 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsForDoctor(id));
     }
 
-    /**
-     * Новый эндпоинт для получения записей врача по статусу.
-     * ID врача извлекается автоматически из токена аутентификации.
-     *
-     * @param status статус записи (SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW)
-     * @return список записей с указанным статусом для текущего врача
-     */
-    @GetMapping("/doctor/by-status")
+    @GetMapping("/doctor/by-status/{status}")
     @PreAuthorize("hasAuthority('DOCTOR')")
     public ResponseEntity<List<DoctorAppiontmentResponseDto>> getDoctorAppointmentsByStatus(
-            @RequestParam AppointmentStatus status) {
+            @PathVariable AppointmentStatus status) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByStatusForCurrentDoctor(status));
     }
 
@@ -58,10 +51,6 @@ public class AppointmentController {
         return ResponseEntity.ok(doctorService.findAllDoctors());
     }
 
-    /**
-     * Обновление статуса записи.
-     * Доступно только врачам.
-     */
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('DOCTOR')")
     public ResponseEntity<DoctorAppiontmentResponseDto> updateStatus(

@@ -7,6 +7,7 @@ import org.example.backendjava.auth_service.model.entity.User;
 import org.example.backendjava.auth_service.repository.DoctorRepository;
 import org.example.backendjava.auth_service.repository.PatientRepository;
 import org.example.backendjava.auth_service.repository.UserRepository;
+import org.example.backendjava.booking_to_doctore_service.exception.AppointmentNotFoundException;
 import org.example.backendjava.booking_to_doctore_service.exception.DoctorAlreadyBookedException;
 import org.example.backendjava.booking_to_doctore_service.exception.DoctorNotFoundException;
 import org.example.backendjava.booking_to_doctore_service.exception.PatientNotFoundException;
@@ -35,38 +36,30 @@ public class AppointmentService {
 
     @Transactional
     public Appointment registerAppointment(AppointmentRequestDto dto) {
-
-        // Проверяем, существует ли врач
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + dto.getDoctorId() + " not found"));
 
-        // Получаем текущего пользователя (пациента)
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userRepository.findIdByUsername(username);
 
-        // Проверяем, существует ли пациент
         Patient patient = patientRepository.findByUserId(userId)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with user id: " + userId + " not found"));
 
-        // Проверяем, не занят ли врач в это время
         if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), dto.getDateTime())) {
             throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + dto.getDateTime());
         }
 
-        // Создаем новый статус пациента
         CurrentPatientStatus status = new CurrentPatientStatus();
         status.setStatus(AppointmentStatus.SCHEDULED);
         status.setSymptomsDescribedByPatient(dto.getSymptomsDescribedByPatient());
         status.setSelfTreatmentMethodsTaken(dto.getSelfTreatmentMethodsTaken());
 
-        // Создаем запись к врачу
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setDateTime(dto.getDateTime());
         appointment.setCurrentPatientStatus(status);
 
-        // Сохраняем в базу данных
         return appointmentRepository.save(appointment);
     }
 
@@ -83,58 +76,38 @@ public class AppointmentService {
         return appointmentRepository.findByPatientId(patientId);
     }
 
-    /**
-     * Получает записи для текущего врача по статусу.
-     * ID врача извлекается автоматически из контекста безопасности.
-     *
-     * @param status статус записи
-     * @return список записей с указанным статусом
-     * @throws DoctorNotFoundException если врач не найден
-     */
     @Transactional(readOnly = true)
     public List<DoctorAppiontmentResponseDto> getAppointmentsByStatusForCurrentDoctor(AppointmentStatus status) {
-        // Получаем текущего пользователя (врача)
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long doctorId = getCurrentDoctorId();
 
-        // Находим пользователя
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new DoctorNotFoundException("User with username: " + username + " not found"));
-
-        // Находим врача по user_id
-        Doctor doctor = doctorRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new DoctorNotFoundException("Doctor profile not found for user: " + username));
-
-        // Получаем записи по ID врача и статусу
-        return appointmentRepository.findByDoctorIdAndStatus(doctor.getId(), status)
+        return appointmentRepository.findByDoctorIdAndStatus(doctorId, status)
                 .stream()
                 .map(appointmentMapper::toDto)
                 .toList();
     }
 
-    /**
-     * Обновляет статус записи к врачу.
-     * Доступно только врачам.
-     *
-     * @param appointmentId ID записи
-     * @param newStatus новый статус
-     * @return обновлённая информация о записи
-     */
     @Transactional
     public DoctorAppiontmentResponseDto updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus) {
-        // Находим запись по ID
         Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
+                .orElseThrow(() -> new AppointmentNotFoundException("Appointment with id " + appointmentId + " not found"));
 
-        // Получаем текущий статус пациента
         CurrentPatientStatus currentStatus = appointment.getCurrentPatientStatus();
-
-        // Обновляем статус
         currentStatus.setStatus(newStatus);
 
-        // Сохраняем изменения
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
-        // Возвращаем обновлённую информацию
         return appointmentMapper.toDto(savedAppointment);
+    }
+
+    private Long getCurrentDoctorId() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new DoctorNotFoundException("User with username: " + username + " not found"));
+
+        Doctor doctor = doctorRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new DoctorNotFoundException("Doctor profile not found for user: " + username));
+
+        return doctor.getId();
     }
 }
