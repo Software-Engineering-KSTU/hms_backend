@@ -15,7 +15,7 @@ import static org.example.backendjava.auth_service.util.ErrorResponseUtil.create
 /**
  * Глобальный обработчик исключений для операций с записями к врачам.
  * <p>
- * Перехватывает ошибки поиска врачей, пациентов и конфликты при записи,
+ * Перехватывает ошибки поиска врачей, пациентов, записей и конфликты при записи,
  * формируя стандартизированный JSON-ответ с информацией об ошибке.
  */
 @Order(1)
@@ -40,6 +40,16 @@ public class AppointmentExceptionHandler {
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handlePatientNotFoundException(PatientNotFoundException ex) {
         log.warn("Patient not found: {}", ex.getMessage());
+        Map<String, Object> response = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    /**
+     * Обрабатывает ошибку, когда запись к врачу не найдена.
+     */
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleAppointmentNotFoundException(AppointmentNotFoundException ex) {
+        log.warn("Appointment not found: {}", ex.getMessage());
         Map<String, Object> response = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
