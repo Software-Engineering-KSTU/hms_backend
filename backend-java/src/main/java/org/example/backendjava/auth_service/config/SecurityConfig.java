@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/appointments/*/status").hasAuthority(Role.DOCTOR.name())
                         .requestMatchers("api/appointments/**").authenticated()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session

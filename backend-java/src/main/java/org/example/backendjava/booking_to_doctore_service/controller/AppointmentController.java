@@ -1,10 +1,7 @@
 package org.example.backendjava.booking_to_doctore_service.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
-import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
-import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorResponseDto;
-import org.example.backendjava.booking_to_doctore_service.model.dto.UpdateStatusRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.*;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.booking_to_doctore_service.model.entity.AppointmentStatus;
 import org.example.backendjava.booking_to_doctore_service.service.AppointmentService;
@@ -59,4 +56,10 @@ public class AppointmentController {
         DoctorAppiontmentResponseDto updated = appointmentService.updateAppointmentStatus(id, request.getStatus());
         return ResponseEntity.ok(updated);
     }
+
+    @GetMapping("/slots/{doctorId}")
+    public ResponseEntity<List<SlotDto>> getAllSlots(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(appointmentService.getCurrentStatusOfDates(doctorId));
+    }
+
 }

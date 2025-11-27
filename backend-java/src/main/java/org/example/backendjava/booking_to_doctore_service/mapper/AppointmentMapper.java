@@ -1,7 +1,7 @@
 package org.example.backendjava.booking_to_doctore_service.mapper;
 
 import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
-import org.example.backendjava.booking_to_doctore_service.model.dto.PatientResponseDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.SlotDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,4 +18,7 @@ public interface AppointmentMapper {
     @Mapping(source = "currentPatientStatus.symptomsDescribedByPatient", target = "symptomsDescribedByPatient")
     @Mapping(source = "currentPatientStatus.selfTreatmentMethodsTaken", target = "selfTreatmentMethodsTaken")
     DoctorAppiontmentResponseDto toDto(Appointment appointment);
+
+
+    SlotDto toSlotDto(Appointment appointment);
 }

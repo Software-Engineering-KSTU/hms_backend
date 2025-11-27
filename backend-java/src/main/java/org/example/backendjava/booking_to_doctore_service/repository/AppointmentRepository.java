@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -17,8 +18,9 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     List<Appointment> findByPatientId(Long patientId);
 
-    boolean existsByDoctorIdAndDateTime(Long doctorId, LocalDateTime dateTime);
+    Optional<Appointment> findByPatientIdAndDoctorId(Long patientId, Long doctorId);
 
+    boolean existsByDoctorIdAndDateTime(Long doctorId, LocalDateTime dateTime);
     /**
      * Находит все записи для конкретного врача с определенным статусом.
      *
