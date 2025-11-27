@@ -21,16 +21,10 @@ class TimeSlotsWidget extends StatelessWidget {
 
   Color getColor(String time) {
     switch (status[time]) {
-      case StatusRegistration.free: return Colors.green;
       case StatusRegistration.mine: return Colors.blue;
-      default: return Colors.red;
+      case StatusRegistration.busy: return Colors.red;
+      default: return Colors.green;
     }
-  }
-
-  void setStatus(Map<String, StatusRegistration> newStatus) {
-    newStatus.forEach((key, value) {
-      status[key] = newStatus[key]!;
-    });
   }
 
   @override

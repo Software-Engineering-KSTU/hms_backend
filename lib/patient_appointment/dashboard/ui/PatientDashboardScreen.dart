@@ -69,22 +69,25 @@ class PatientDashboardScreenState
                   builder: (context) {
                     return AlertDialog(
                       title: Text(time),
-                      content: Text("Вы действительно хотите записаться на это время ?"),
+                      content: Text(
+                        "Вы действительно хотите записаться на это время ?",
+                      ),
                       actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Отмена"),
-                        ),
-
-                        Spacer(),
-
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("Да"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Отмена"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                viewModel.setMineStatusRegistration(time);
+                                Navigator.pop(context);
+                              },
+                              child: Text("Да"),
+                            ),
+                          ],
                         ),
                       ],
                     );
