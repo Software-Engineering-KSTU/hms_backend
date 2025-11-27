@@ -106,8 +106,10 @@ flutter --version
 Необходимо ввести следующу команду в консоли проекта:
 
 android studio terminal
-flutter pub get
 
+```brach 
+flutter pub get
+```
 ### Шаг 8: Запуск проекта
 1. Выберите в верхней панеле "устройство" Chome (web)
 2. Выбрать зеленый треугольник
