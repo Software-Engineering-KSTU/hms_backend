@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Map;
 
-import static org.example.backendjava.autth_service.util.ErrorResponseUtil.createErrorResponse;
+import static org.example.backendjava.auth_service.util.ErrorResponseUtil.createErrorResponse;
 
 /**
  * Глобальный обработчик исключений для операций с записями к врачам.

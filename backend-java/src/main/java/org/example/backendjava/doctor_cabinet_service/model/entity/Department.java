@@ -1,8 +1,6 @@
 package org.example.backendjava.doctor_cabinet_service.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,5 +17,6 @@ public class Department {
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String name;
 }

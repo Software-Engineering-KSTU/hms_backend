@@ -1,16 +1,22 @@
 package org.example.backendjava.booking_to_doctore_service.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backendjava.auth_service.repository.UserRepository;
 import org.example.backendjava.booking_to_doctore_service.exception.DoctorAlreadyBookedException;
 import org.example.backendjava.booking_to_doctore_service.exception.DoctorNotFoundException;
 import org.example.backendjava.booking_to_doctore_service.exception.PatientNotFoundException;
+import org.example.backendjava.booking_to_doctore_service.mapper.AppointmentMapper;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
-import org.example.backendjava.autth_service.model.entity.Doctor;
-import org.example.backendjava.autth_service.model.entity.Patient;
+import org.example.backendjava.auth_service.model.entity.Doctor;
+import org.example.backendjava.auth_service.model.entity.Patient;
+import org.example.backendjava.booking_to_doctore_service.model.entity.AppointmentStatus;
+import org.example.backendjava.booking_to_doctore_service.model.entity.CurrentPatientStatus;
 import org.example.backendjava.booking_to_doctore_service.repository.AppointmentRepository;
-import org.example.backendjava.autth_service.repository.DoctorRepository;
-import org.example.backendjava.autth_service.repository.PatientRepository;
+import org.example.backendjava.auth_service.repository.DoctorRepository;
+import org.example.backendjava.auth_service.repository.PatientRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,38 +28,57 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
+    private final UserRepository userRepository;
+    private final AppointmentMapper appointmentMapper;
 
     public Appointment registerAppointment(AppointmentRequestDto dto) {
 
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + dto.getDoctorId() + " not found"));
 
-        Patient patient = patientRepository.findById(dto.getPatientId())
-                .orElseThrow(() -> new PatientNotFoundException("Patient with id: " + dto.getPatientId() + " not found"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long userId = userRepository.findIdByUsername(username);
 
-        if (appointmentRepository.existsByDoctorIdAndDateTime(doctor.getId(), dto.getDateTime())) {
+        Patient patient = patientRepository.findByUserId(userId)
+                .orElseThrow(() -> new PatientNotFoundException("Patient with user id: " + userId + " not found"));
+
+        if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), dto.getDateTime())) {
             throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + dto.getDateTime());
         }
+
+        CurrentPatientStatus status = new CurrentPatientStatus();
+        status.setStatus(AppointmentStatus.SCHEDULED);
+        status.setSymptomsDescribedByPatient(dto.getSymptomsDescribedByPatient());
+        status.setSelfTreatmentMethodsTaken(dto.getSelfTreatmentMethodsTaken());
 
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setDateTime(dto.getDateTime());
-        appointment.setStatus("");
-
-        appointment.setSymptoms(dto.getSymptoms());
-        appointment.setTreatmentMethods(dto.getTreatmentMethods());
-
+        appointment.setCurrentPatientStatus(status);
 
         return appointmentRepository.save(appointment);
     }
 
-    public List<Appointment> getAppointmentsForDoctor(Long doctorId) {
-        return appointmentRepository.findByDoctorId(doctorId);
+    public List<DoctorAppiontmentResponseDto> getAppointmentsForDoctor(Long doctorId) {
+        return appointmentRepository.findByDoctorId(doctorId)
+                .stream()
+                .map(appointmentMapper::toDto)
+                .toList();
     }
 
     public List<Appointment> getAppointmentsForPatient(Long patientId) {
         return appointmentRepository.findByPatientId(patientId);
     }
 
+    public DoctorAppiontmentResponseDto updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new RuntimeException("Appointment with id " + appointmentId + " not found"));
+
+        CurrentPatientStatus currentStatus = appointment.getCurrentPatientStatus();
+        currentStatus.setStatus(newStatus);
+
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return appointmentMapper.toDto(savedAppointment);
+    }
 }

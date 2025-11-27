@@ -1,19 +1,20 @@
-package org.example.backendjava.booking_to_doctore_service.model.dto;
+package org.example.backendjava.auth_service.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.backendjava.auth_service.model.entity.User;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "patients")
 @Getter
 @Setter
-public class DoctorResponseDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,9 +22,9 @@ public class DoctorResponseDto {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    private User user;
-    private String specialization;
-    private String phoneNumber;
-    private LocalDate birthDate;
+    private User user; // УБИРАЕМ transient, чтобы можно было получить username
 
+    private String phoneNumber;
+    private String address;
+    private LocalDate birthDate;
 }

@@ -1,6 +1,6 @@
 package org.example.backendjava.booking_to_doctore_service.service;
 
-import org.example.backendjava.autth_service.repository.DoctorRepository;
+import org.example.backendjava.auth_service.repository.DoctorRepository;
 import org.example.backendjava.booking_to_doctore_service.DoctorMapper;
 import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorResponseDto;
 import org.springframework.stereotype.Service;

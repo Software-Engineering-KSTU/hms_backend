@@ -2,7 +2,9 @@ package org.example.backendjava.booking_to_doctore_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorResponseDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.UpdateStatusRequestDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.booking_to_doctore_service.service.AppointmentService;
 import org.example.backendjava.booking_to_doctore_service.service.DoctorService;
@@ -26,7 +28,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/doctor/{id}")
-    public List<Appointment> getDoctorAppointments(@PathVariable Long id) {
+    public List<DoctorAppiontmentResponseDto> getDoctorAppointments(@PathVariable Long id) {
         return appointmentService.getAppointmentsForDoctor(id);
     }
 
@@ -40,4 +42,15 @@ public class AppointmentController {
         return doctorService.findAllDoctors();
     }
 
+    /**
+     * Обновление статуса записи.
+     * Доступно только врачам.
+     */
+    @PutMapping("/{id}/status")
+    public ResponseEntity<DoctorAppiontmentResponseDto> updateStatus(
+            @PathVariable Long id,
+            @RequestBody UpdateStatusRequestDto request) {
+        DoctorAppiontmentResponseDto updated = appointmentService.updateAppointmentStatus(id, request.getStatus());
+        return ResponseEntity.ok(updated);
+    }
 }
