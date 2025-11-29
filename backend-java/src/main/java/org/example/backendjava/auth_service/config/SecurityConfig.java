@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 /**
  * Конфигурация безопасности приложения.
@@ -34,8 +35,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
+
+                        // 1. КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Разрешаем все запросы OPTIONS без аутентификации
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 2. Все ваши существующие публичные и приватные маршруты
                         .requestMatchers("/api/auth/patient-register","/api/auth/login", "/swagger-ui/index.html", "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html", "/docs/openapi.yml").permitAll()
@@ -48,6 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/**").authenticated()
                         .requestMatchers("/api/appointments/*/status").hasAuthority(Role.DOCTOR.name())
                         .requestMatchers("api/appointments/**").authenticated()
+                        .requestMatchers("/api/departments/**").hasAuthority(Role.ADMIN.name())
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
