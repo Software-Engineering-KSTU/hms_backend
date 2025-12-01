@@ -14,6 +14,7 @@ import org.example.backendjava.booking_to_doctore_service.exception.DoctorNotFou
 import org.example.backendjava.booking_to_doctore_service.exception.PatientNotFoundException;
 import org.example.backendjava.booking_to_doctore_service.mapper.AppointmentMapper;
 import org.example.backendjava.booking_to_doctore_service.model.dto.AppointmentRequestDto;
+import org.example.backendjava.booking_to_doctore_service.model.dto.CurrentDoctorRequestDto;
 import org.example.backendjava.booking_to_doctore_service.model.dto.DoctorAppiontmentResponseDto;
 import org.example.backendjava.booking_to_doctore_service.model.dto.SlotDto;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
@@ -150,6 +151,39 @@ public class AppointmentService {
             AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
 
             if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
+                String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
+                dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
+            }
+        }
+
+        return dates;
+    }
+
+    public List<SlotDto> getCurrentStatusOfDatesDay(CurrentDoctorRequestDto dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
+
+        Patient patient = patientRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new PatientNotFoundException("Patient with id: " + user.getId() + " not found"));
+
+        List<Appointment> appointments = appointmentRepository.findByDoctorId(dto.getDoctorId());
+
+        List<SlotDto> dates = new ArrayList<>();
+
+        for (Appointment appointment : appointments) {
+            if (!appointment.getDateTime().toLocalDate().equals(dto.getDate())) {
+                continue;
+            }
+
+            if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
+                continue;
+            }
+
+            AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
+
+            if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
+
                 String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
                 dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
             }

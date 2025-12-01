@@ -63,6 +63,12 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getCurrentStatusOfDates(doctorId));
     }
 
+
+    @PostMapping("/slots/current-day")
+    public ResponseEntity<List<SlotDto>> getAllSlotsByDay(@RequestBody CurrentDoctorRequestDto dto) {
+        return ResponseEntity.ok(appointmentService.getCurrentStatusOfDatesDay(dto));
+    }
+
     @GetMapping("/doctor/current-date/{dateTime}")
     public ResponseEntity<List<DoctorAppiontmentResponseDto>> getPatientAppointments(@PathVariable LocalDate dateTime) {
         return ResponseEntity.ok(appointmentService.getAppointmentsByDateForCurrentDoctor(dateTime));
