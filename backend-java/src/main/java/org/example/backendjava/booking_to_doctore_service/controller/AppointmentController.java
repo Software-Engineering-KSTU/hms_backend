@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class AppointmentController {
     }
 
     @GetMapping("/patient/{id}")
-    public ResponseEntity<List<Appointment>> getPatientAppointments(@PathVariable Long id) {
+    public ResponseEntity<List<DoctorAppiontmentResponseDto>> getPatientAppointments(@PathVariable Long id) {
         return ResponseEntity.ok(appointmentService.getAppointmentsForPatient(id));
     }
 
@@ -60,6 +61,11 @@ public class AppointmentController {
     @GetMapping("/slots/{doctorId}")
     public ResponseEntity<List<SlotDto>> getAllSlots(@PathVariable Long doctorId) {
         return ResponseEntity.ok(appointmentService.getCurrentStatusOfDates(doctorId));
+    }
+
+    @GetMapping("/doctor/current-date/{dateTime}")
+    public ResponseEntity<List<DoctorAppiontmentResponseDto>> getPatientAppointments(@PathVariable LocalDate dateTime) {
+        return ResponseEntity.ok(appointmentService.getAppointmentsByDateForCurrentDoctor(dateTime));
     }
 
 }

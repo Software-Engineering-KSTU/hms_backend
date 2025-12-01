@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,8 +76,11 @@ public class AppointmentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Appointment> getAppointmentsForPatient(Long patientId) {
-        return appointmentRepository.findByPatientId(patientId);
+    public List<DoctorAppiontmentResponseDto> getAppointmentsForPatient(Long patientId) {
+        return appointmentRepository.findByPatientId(patientId)
+                .stream()
+                .map(appointmentMapper::toDoctorAppointmentResponseDto)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -85,7 +89,18 @@ public class AppointmentService {
 
         return appointmentRepository.findByDoctorIdAndStatus(doctorId, status)
                 .stream()
-                .map(appointmentMapper::toDto)
+                .map(appointmentMapper::toDoctorAppointmentResponseDto)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DoctorAppiontmentResponseDto> getAppointmentsByDateForCurrentDoctor(LocalDate date) {
+        Long doctorId = getCurrentDoctorId();
+
+        return appointmentRepository.findByDoctorId(doctorId)
+                .stream()
+                .map(appointmentMapper::toDoctorAppointmentResponseDto)
+                .filter(dto -> dto.getDateTime().toLocalDate().equals(date))
                 .toList();
     }
 
