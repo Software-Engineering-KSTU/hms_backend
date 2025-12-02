@@ -7,6 +7,7 @@ import org.example.backendjava.auth_service.util.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -31,18 +32,28 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthEntryPoint authEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+
+                // ----------------------------------------------------
+                // НОВОЕ ДОБАВЛЕНИЕ: ОБРАБОТЧИК ОШИБОК АУТЕНТИФИКАЦИИ
+                // ----------------------------------------------------
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(authEntryPoint) // Используем наш EntryPoint
+                )
+                // ----------------------------------------------------
+
                 .authorizeHttpRequests(req -> req
 
-                        // 1. КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: Разрешаем все запросы OPTIONS без аутентификации
+                        // 1. Разрешаем OPTIONS (уже было)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 2. Все ваши существующие публичные и приватные маршруты
+                        // 2. Ваши маршруты...
                         .requestMatchers("/api/auth/patient-register","/api/auth/login", "/swagger-ui/index.html", "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html", "/docs/openapi.yml").permitAll()
