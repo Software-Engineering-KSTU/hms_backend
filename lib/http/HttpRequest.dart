@@ -14,8 +14,15 @@ class HttpRequest {
     return await dio.get(endpoint);
   }
 
-  Future<Response> postRequest(String endpoint) async {
-    return await dio.post(endpoint);
+  Future<Response> postRequest(
+      String endpoint, {
+        Map<String, dynamic>? data,
+        Map<String, dynamic>? headers,
+      }) async {
+    return await dio.post(
+      endpoint,
+      data: data,
+      options: Options(headers: headers),
+    );
   }
-
 }

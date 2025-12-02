@@ -38,14 +38,16 @@ class ToggleButtonsGroup extends StatefulWidget {
 class _ToggleButtonsGroupState extends State<ToggleButtonsGroup> {
 
   int _selectedIndex = 0;
-  final List<String> _buttonTitles = ['Главная', 'Отделения', 'Контакты', 'Запись к врачу'];
+  final List<String> _buttonTitles = ['Главная', 'Отделения', 'Контакты', 'Запись к врачу', 'Регистрация', 'Авторизация'];
 
   void _selectButton(int index) {
 
     setState(() {
       _selectedIndex = index;
     });
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +60,19 @@ class _ToggleButtonsGroupState extends State<ToggleButtonsGroup> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: TextButton(
-              onPressed: () => _selectButton(index),
-
+              // В _ToggleButtonsGroupState, в TextButton:
+                onPressed: () {
+                  _selectButton(index);
+                  switch (index) {
+                    case 0: context.go('/'); break;  // Главная → /
+                    case 1: context.go('/'); break;  // Отделения (добавьте роут, если нужно)
+                    case 2: context.go('/'); break;  // Контакты
+                    case 3: context.go('/'); break;  // Запись к врачу → регистрация
+                    case 4: context.go('/registration'); break;
+                    case 5: context.go('/login'); break;
+                  }
+                },
+//
               style: TextButton.styleFrom(
                 backgroundColor: isActive
                     ? Colors.blue.shade100
