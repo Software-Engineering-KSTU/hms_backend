@@ -14,7 +14,7 @@ import java.util.List;
  * Содержит эндпоинты для получения всех пользователей, поиска конкретного пользователя и обновления данных пользователя.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 

@@ -28,20 +28,13 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException) throws IOException, ServletException {
 
         log.error("Unauthorized error: {}", authException.getMessage());
-
-        // 1. Установка заголовков CORS
-        // Это гарантирует, что даже при ошибке 401/403 браузер получит необходимые CORS-разрешения.
-        // Вы можете заменить "*" на конкретный домен Flutter-приложения, если он известен.
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
         response.setHeader("Access-Control-Max-Age", "3600");
 
-        // 2. Установка статуса и типа содержимого
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
-
-        // 3. Отправка JSON-сообщения об ошибке
         response.getWriter().write(
                 "{\"status\": 401, \"error\": \"Unauthorized\", \"message\": \"Authentication failed: Invalid or missing token.\"}"
         );

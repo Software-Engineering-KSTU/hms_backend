@@ -40,20 +40,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
 
-                // ----------------------------------------------------
-                // НОВОЕ ДОБАВЛЕНИЕ: ОБРАБОТЧИК ОШИБОК АУТЕНТИФИКАЦИИ
-                // ----------------------------------------------------
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(authEntryPoint) // Используем наш EntryPoint
                 )
-                // ----------------------------------------------------
-
                 .authorizeHttpRequests(req -> req
-
-                        // 1. Разрешаем OPTIONS (уже было)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // 2. Ваши маршруты...
                         .requestMatchers("/api/auth/patient-register","/api/auth/login", "/swagger-ui/index.html", "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html", "/docs/openapi.yml").permitAll()
