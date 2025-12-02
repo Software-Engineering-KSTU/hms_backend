@@ -5,6 +5,9 @@ import 'package:hmsweb/base/view/CustomAppBar.dart';
 import 'package:hmsweb/home/ui/HomeModel.dart';
 import 'package:hmsweb/home/ui/HomeScreen.dart';
 import 'package:provider/provider.dart';
+import '../doctors_summary/ui/Doctor_summery.dart';
+import '../errorpage/ui/Error404Page.dart';
+import '../errorpage/ui/Error500Page.dart';
 import 'package:hmsweb/auth/ui/LoginScreen.dart';  // Импорт LoginScreen
 import 'package:hmsweb/auth/ui/RegistrationScreen.dart';  // Импорт RegistrationScreen
 import 'package:hmsweb/auth/AuthModel.dart';  // Импорт AuthModel
