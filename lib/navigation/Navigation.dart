@@ -4,6 +4,8 @@ import 'package:hmsweb/base/BaseScreenModel.dart';
 import 'package:hmsweb/base/view/CustomAppBar.dart';
 import 'package:hmsweb/home/ui/HomeModel.dart';
 import 'package:hmsweb/home/ui/HomeScreen.dart';
+import 'package:hmsweb/patient_appointment/dashboard/ui/doctor_list/DoctorListScreen.dart';
+import 'package:hmsweb/patient_appointment/dashboard/ui/doctor_list/DoctorListScreenModel.dart';
 import 'package:provider/provider.dart';
 
 import '../doctor_appointment/dashboard/ui/DoctorDashboardScreen.dart';
@@ -39,6 +41,11 @@ final GoRouter router = GoRouter(
         createModel: () => DoctorDashboardScreenModel()),
 
     buildRoute(
+        path: '/patient/doctors',
+        screen: DoctorListScreen(),
+        createModel: () => DoctorListScreenModel()),
+
+    buildRoute(
         path: '/patient/dashboard',
         screen: PatientDashboardScreen(),
         createModel: () => PatientDashboardScreenModel()),
@@ -61,16 +68,3 @@ final GoRouter router = GoRouter(
     ),
   ],
 );
-
-class TestScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red,
-    );
-  }
-
-
-
-
-}

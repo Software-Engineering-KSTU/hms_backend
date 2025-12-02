@@ -58,7 +58,7 @@ class DoctorDashboardScreenState
           if (viewModel.isLoading)
             CircularProgressIndicator()
           else
-            TimeSlotsWidget(status: viewModel.status, onTimeSelected: (String time) {  }),
+            PatientSlotsWidget(status: viewModel.status, onTimeSelected: (String time) {  }),
 
           MaterialButton(onPressed: () {
             viewModel.setMineStatusRegistration();

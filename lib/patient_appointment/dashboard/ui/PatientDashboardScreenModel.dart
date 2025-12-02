@@ -13,7 +13,13 @@ class PatientDashboardScreenModel extends BaseScreenModel {
       "08:20": StatusRegistration.mine,
       "08:40": StatusRegistration.busy,
     });
-    //init state
+  }
+
+  bool isNotBusyOrMine(String time) {
+    if (status[time] == StatusRegistration.busy) return false;
+    if (status[time] == StatusRegistration.mine) return false;
+
+    return true;
   }
 
   void setMineStatusRegistration(String time) {
@@ -24,5 +30,4 @@ class PatientDashboardScreenModel extends BaseScreenModel {
     status[time] = StatusRegistration.mine;
     notifyListeners();
   }
-
 }

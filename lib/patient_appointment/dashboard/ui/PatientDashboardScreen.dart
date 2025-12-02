@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hmsweb/base/BaseScreen.dart';
 import 'package:hmsweb/doctor_appointment/dashboard/ui/view/TimeSlotsWidget.dart';
+import 'package:hmsweb/patient_appointment/dashboard/ui/view/BookTimeDialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import 'PatientDashboardScreenModel.dart';
 
 class PatientDashboardScreen extends StatefulWidget {
+  const PatientDashboardScreen({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return PatientDashboardScreenState();
@@ -58,39 +61,35 @@ class PatientDashboardScreenState
             ),
           ),
 
-          if (viewModel.isLoading)
-            CircularProgressIndicator()
+          if (viewModel.isLoading) CircularProgressIndicator()
           else
-            TimeSlotsWidget(
+            PatientSlotsWidget(
               status: viewModel.status,
               onTimeSelected: (String time) {
                 showDialog(
                   context: context,
                   builder: (context) {
-                    return AlertDialog(
-                      title: Text(time),
-                      content: Text(
-                        "Вы действительно хотите записаться на это время ?",
-                      ),
-                      actions: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Отмена"),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                viewModel.setMineStatusRegistration(time);
-                                Navigator.pop(context);
-                              },
-                              child: Text("Да"),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
+                    if (viewModel.isNotBusyOrMine(time)) {
+                      return BookTimeDialog(
+                        title: time,
+                        content:
+                            "Вы действительно хотите записаться на это время ?",
+                        context: context,
+                        onAccept: () {
+                          viewModel.setMineStatusRegistration(time);
+                        },
+                        acceptText: 'Да',
+                        isShowNegative: true,
+                      );
+                    } else {
+                      return BookTimeDialog(
+                        title: "Время занято",
+                        content: "На это время уже есть запись",
+                        context: context,
+                        acceptText: 'Ок',
+                        isShowNegative: false,
+                      );
+                    }
                   },
                 );
               },

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'StatusRegistration.dart';
 
-class TimeSlotsWidget extends StatelessWidget {
+class PatientSlotsWidget extends StatelessWidget {
   final Map<String, StatusRegistration> status;
   final Function(String time) onTimeSelected;
 
-  TimeSlotsWidget({
+  PatientSlotsWidget({
     super.key,
     required this.status,
     required this.onTimeSelected,
@@ -81,10 +81,7 @@ class TimeSlotsWidget extends StatelessWidget {
           children: times.map((time) {
             return GestureDetector(
               onTap: () {
-                if (status[time] != StatusRegistration.busy ||
-                    status[time] != StatusRegistration.mine) {
                   onTimeSelected(time);
-                }
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 22, vertical: 14),
