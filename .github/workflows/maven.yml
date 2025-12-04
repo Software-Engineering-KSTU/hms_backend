@@ -14,8 +14,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: List backend-java directory
-      run: ls -R backend-java
+    - name: List repository contents
+      run: ls -R   # теперь смотрим всё в корне
 
     - name: Set up JDK 21
       uses: actions/setup-java@v4
@@ -25,5 +25,4 @@ jobs:
         cache: maven
 
     - name: Build with Maven (skip tests)
-      working-directory: backend-java
-      run: mvn -B package -DskipTests
+      run: mvn -B package -DskipTests  # теперь mvn запускается в корне
