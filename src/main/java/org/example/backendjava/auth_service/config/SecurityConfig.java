@@ -53,7 +53,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/docs/openapi.yml").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/departments").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/departments").permitAll()
                         .requestMatchers("/api/cards/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/blocking/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/auth/doctor-register").hasAuthority(Role.ADMIN.name())
