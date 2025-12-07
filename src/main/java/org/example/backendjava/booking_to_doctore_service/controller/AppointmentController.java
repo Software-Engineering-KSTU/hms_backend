@@ -25,33 +25,13 @@ public class AppointmentController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerAppointment(@RequestBody AppointmentRequestDto dto) {
-        // 2. Логируем то, что пришло от клиента (Request)
-        log.info("\n========== [NEW APPOINTMENT REQUEST] ==========\n" +
-                        "Doctor ID: {}\n" +
-                        "Date:      {}\n" +
-                        "Time:      {}\n" +
-                        "Symptoms:  {}\n" +
-                        "Self Treat: {}",
-                dto.getDoctorId(),
-                dto.getDate(),
-                dto.getTime(),
-                dto.getSymptomsDescribedByPatient(),
-                dto.getSelfTreatmentMethodsTaken()
-        );
+
 
         Appointment appointment = appointmentService.registerAppointment(dto);
 
         String responseMessage = "Appointment registered with ID: " + appointment.getId();
 
-        // 3. Логируем то, что отдаем клиенту (Response)
-        log.info("\n========== [RESPONSE TO CLIENT] ==========\n" +
-                        "Status:     200 OK\n" +
-                        "Created ID: {}\n" +
-                        "Message:    {}\n" +
-                        "==========================================",
-                appointment.getId(),
-                responseMessage
-        );
+
 
         return ResponseEntity.ok(responseMessage);
     }

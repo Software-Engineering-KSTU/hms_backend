@@ -210,22 +210,40 @@ public class AppointmentService {
         List<SlotDto> dates = new ArrayList<>();
 
         for (Appointment appointment : appointments) {
-            if (!appointment.getDateTime().toLocalDate().equals(dto.getDate())) {
-                continue;
-            }
-
-            if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
-                continue;
-            }
-
-            AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
-
-            if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
-
-                String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
-                dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
-            }
+            // --- ПРОВЕРКА 1: Если даты вообще нет (битая запись) ---
+        if (appointment.getDateTime() == null) {
+            // Создаем слот с ошибкой
+            SlotDto errorSlot = new SlotDto();
+            errorSlot.setDateTime(null); // Даты нет
+            // Пишем в статус, что запись сломана, и добавляем ID для отладки
+            errorSlot.setBusyStatus("ERROR: Date is missing (ID: " + appointment.getId() + ")");
+            dates.add(errorSlot);
+            continue; // Идем к следующей записи
         }
+
+        // --- ПРОВЕРКА 2: Фильтр по дате (если дата есть, но не та, что просили) ---
+        if (!appointment.getDateTime().toLocalDate().equals(dto.getDate())) {
+            continue; // Просто пропускаем, это не ошибка, а другой день
+        }
+
+        // --- ПРОВЕРКА 3: Если нет статуса пациента (битая запись) ---
+        if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
+            SlotDto errorSlot = new SlotDto();
+            errorSlot.setDateTime(appointment.getDateTime());
+            errorSlot.setBusyStatus("ERROR: Status is missing (ID: " + appointment.getId() + ")");
+            dates.add(errorSlot);
+            continue;
+        }
+
+        // --- НОРМАЛЬНАЯ ОБРАБОТКА ---
+        AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
+
+        if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
+            String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
+            dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
+        }
+    }
+
 
         return dates;
     }
