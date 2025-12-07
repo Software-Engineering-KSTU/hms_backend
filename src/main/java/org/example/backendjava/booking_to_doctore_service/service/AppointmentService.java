@@ -30,9 +30,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.time.LocalTime;
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -45,58 +42,28 @@ public class AppointmentService {
 
     @Transactional
     public Appointment registerAppointment(AppointmentRequestDto dto) {
-        // 1. Поиск доктора
         Doctor doctor = doctorRepository.findById(dto.getDoctorId())
                 .orElseThrow(() -> new DoctorNotFoundException("Doctor with id: " + dto.getDoctorId() + " not found"));
 
-        // 2. Поиск пациента
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Long userId = userRepository.findIdByUsername(username);
 
         Patient patient = patientRepository.findByUserId(userId)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with user id: " + userId + " not found"));
 
-        // 3. Сборка и Валидация Времени
-
-        // Берем дату из DTO
-        LocalDate date = dto.getDate();
-        // Берем время из DTO и принудительно обнуляем секунды и наносекунды
-        LocalTime time = dto.getTime().withSecond(0).withNano(0);
-
-        // Собираем полную дату-время для проверки и сохранения
-        LocalDateTime appointmentDateTime = LocalDateTime.of(date, time);
-
-        // Получаем текущее время сервера (без учета часовых поясов, как "настенные часы")
-        LocalDateTime now = LocalDateTime.now();
-
-        // ПРОВЕРКА: Нельзя записаться на время, которое уже прошло
-        // Это покрывает два случая:
-        // а) Дата в прошлом (вчера и ранее)
-        // б) Дата сегодня, но время меньше текущего (сейчас 12:00, пытаемся на 11:00)
-        if (appointmentDateTime.isBefore(now)) {
-            throw new IllegalArgumentException("Нельзя записаться на прошедшее время. Текущее время: " + now);
+        if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), dto.getDateTime())) {
+            throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + dto.getDateTime());
         }
 
-        // 4. Проверка занятости слота в БД
-        if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), appointmentDateTime)) {
-            throw new DoctorAlreadyBookedException("Доктор уже занят на это время: " + appointmentDateTime);
-        }
-
-        // 5. Создание статуса
         CurrentPatientStatus status = new CurrentPatientStatus();
         status.setStatus(AppointmentStatus.SCHEDULED);
         status.setSymptomsDescribedByPatient(dto.getSymptomsDescribedByPatient());
         status.setSelfTreatmentMethodsTaken(dto.getSelfTreatmentMethodsTaken());
 
-        // 6. Сохранение записи
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-
-        // Сохраняем собранный LocalDateTime, так как сущность Appointment в БД
-        // скорее всего ожидает именно этот формат.
-        appointment.setDateTime(appointmentDateTime);
-
+        appointment.setDateTime(dto.getDateTime());
         appointment.setCurrentPatientStatus(status);
 
         return appointmentRepository.save(appointment);
