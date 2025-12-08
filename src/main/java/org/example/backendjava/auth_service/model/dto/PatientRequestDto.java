@@ -23,4 +23,8 @@ public class PatientRequestDto {
     private String phoneNumber;
     private String address;
     private LocalDate dateOfBirth;
+
+    public PatientRequestDto(String patient1, String mail, String number, String number1, String moscow, String date) {
+
+    }
 }
