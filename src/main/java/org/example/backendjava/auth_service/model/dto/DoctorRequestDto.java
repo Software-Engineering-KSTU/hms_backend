@@ -24,6 +24,6 @@ public class DoctorRequestDto {
     private LocalDate dateOfBirth;
 
     public DoctorRequestDto(String doc1, String mail, String number, String cardiology, String number1, String date) {
-
     }
 }
+

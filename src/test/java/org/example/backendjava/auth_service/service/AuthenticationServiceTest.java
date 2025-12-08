@@ -61,7 +61,7 @@ class AuthenticationServiceTest {
         when(passwordEncoder.encode(any())).thenReturn("encoded");
         when(userRepository.save(any())).thenAnswer(i -> i.getArguments()[0]);
         when(jwtUtil.generateAccessToken(any())).thenReturn("access");
-                when(jwtUtil.generateRefreshToken(any())).thenReturn("refresh");
+        when(jwtUtil.generateRefreshToken(any())).thenReturn("refresh");
 
         AuthResponse resp = authenticationService.patientRegister(req);
 

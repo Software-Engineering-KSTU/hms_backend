@@ -8,6 +8,5 @@ public class LoginRequestDto {
     private String password;
 
     public LoginRequestDto(String patient1, String number) {
-
     }
 }
