@@ -1,6 +1,7 @@
 package org.example.backendjava.booking_to_doctore_service.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j; // <--- Добавьте этот импорт
 import org.example.backendjava.booking_to_doctore_service.model.dto.*;
 import org.example.backendjava.booking_to_doctore_service.model.entity.Appointment;
 import org.example.backendjava.booking_to_doctore_service.model.entity.AppointmentStatus;
@@ -13,18 +14,26 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j // анотация для логирования
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
-
+    //
     private final AppointmentService appointmentService;
     private final DoctorService doctorService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerAppointment(@RequestBody AppointmentRequestDto dto) {
+
+
         Appointment appointment = appointmentService.registerAppointment(dto);
-        return ResponseEntity.ok("Appointment registered with ID: " + appointment.getId());
+
+        String responseMessage = "Appointment registered with ID: " + appointment.getId();
+
+
+
+        return ResponseEntity.ok(responseMessage);
     }
 
     @GetMapping("/doctor")
