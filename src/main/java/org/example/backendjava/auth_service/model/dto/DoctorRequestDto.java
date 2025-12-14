@@ -16,14 +16,12 @@ public class DoctorRequestDto {
     @Email(message = "not correct format of email")
     @NotBlank(message = "email can't be empty")
     private String email;
-
     @NotBlank(message = "password can't be empty")
+
     private String password;
     private String specialization;
     private String phoneNumber;
     private LocalDate dateOfBirth;
 
-    public DoctorRequestDto(String doc1, String mail, String number, String cardiology, String number1, String date) {
-    }
 }
 

@@ -31,6 +31,12 @@
     </properties>
       <dependencies>
 
+          <dependency>
+              <groupId>io.minio</groupId>
+              <artifactId>minio</artifactId>
+              <version>8.5.7</version>
+          </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>

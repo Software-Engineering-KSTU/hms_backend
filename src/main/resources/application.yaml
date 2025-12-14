@@ -5,15 +5,21 @@ spring:
   datasource:
     url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/hms}
     username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:1234}
+    password: ${DATASOURCE_PASSWORD:postgres}
     driver-class-name: ${DATASOURCE_DRIVER:org.postgresql.Driver}
   jpa:
     hibernate:
       ddl-auto: ${JPA_HIBERNATE_DDL_AUTO:update}
 server:
-  port: ${SERVER_PORT:8081}
+  port: ${SERVER_PORT:8080}
 security:
   jwt:
     secret-key: bb881451354ad90b161deb433b52a964ec4cd34db010d24f3e116136ab734e8a
     access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:604800000}
     refresh-token-expiration: ${JWT_REFRESH_TOKEN_EXPIRATION:60480000000}
+
+minio:
+  url: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin
+  bucket: doctor-photos

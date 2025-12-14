@@ -18,20 +18,17 @@ public class DoctorResume {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(optional = false)
     @JoinColumn(name = "doctor_id", nullable = false, unique = true)
     private Doctor doctor;
 
-    @Column(columnDefinition = "TEXT")
-    private String aboutMe;
-
+    private String stage;
     private Integer experienceYears;
+    private String education;
+    private String certificates;
 
-    private Integer age;
-
-    @Column(columnDefinition = "TEXT")
-    private String educationJson; // JSON: [{university, year, specialty, diplomaPhotoUrl}]
-
-    // Можно хранить как строку URL или отдельно сущность Photo — пока просто URL
+    @Column(name = "photo_url")
     private String photoUrl;
+
+    private String description;
 }
