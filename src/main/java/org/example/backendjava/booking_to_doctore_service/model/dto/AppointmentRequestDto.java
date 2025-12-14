@@ -11,10 +11,9 @@ import java.time.LocalDateTime;
 public class AppointmentRequestDto {
     private Long doctorId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime dateTime;
 
-    // Добавляем поля для симптомов и самолечения
     private String symptomsDescribedByPatient;
     private String selfTreatmentMethodsTaken;
 }

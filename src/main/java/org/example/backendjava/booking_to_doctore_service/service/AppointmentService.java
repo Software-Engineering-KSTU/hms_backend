@@ -21,7 +21,6 @@ import org.example.backendjava.booking_to_doctore_service.model.entity.Appointme
 import org.example.backendjava.booking_to_doctore_service.model.entity.AppointmentStatus;
 import org.example.backendjava.booking_to_doctore_service.model.entity.CurrentPatientStatus;
 import org.example.backendjava.booking_to_doctore_service.repository.AppointmentRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

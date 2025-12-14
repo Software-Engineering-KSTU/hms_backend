@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Slf4j // анотация для логирования
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/appointments")
@@ -25,14 +25,8 @@ public class AppointmentController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerAppointment(@RequestBody AppointmentRequestDto dto) {
-
-
         Appointment appointment = appointmentService.registerAppointment(dto);
-
         String responseMessage = "Appointment registered with ID: " + appointment.getId();
-
-
-
         return ResponseEntity.ok(responseMessage);
     }
 
