@@ -113,7 +113,7 @@ public class AuthenticationService {
         revokeAllTokenByUser(user);
         saveUserToken(accessToken, user);
 
-        return new AuthResponse(accessToken, refreshToken);
+        return new AuthResponse(accessToken, refreshToken, user.getRole().name());
     }
 
     /**
@@ -141,7 +141,7 @@ public class AuthenticationService {
             revokeAllTokenByUser(user);
             saveUserToken(accessToken, user);
 
-            AuthResponse response = new AuthResponse(accessToken, refreshToken);
+            AuthResponse response = new AuthResponse(accessToken, refreshToken, user.getRole().name());
             return ResponseEntity.ok(response);
         }
 
@@ -180,7 +180,7 @@ public class AuthenticationService {
         String accessToken = jwtUtil.generateAccessToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(user);
         saveUserToken(accessToken, user);
-        return new AuthResponse(accessToken, refreshToken);
+        return new AuthResponse(accessToken, refreshToken, user.getRole().name());
     }
 
     public void checkExistingUser(String username, String email) {
