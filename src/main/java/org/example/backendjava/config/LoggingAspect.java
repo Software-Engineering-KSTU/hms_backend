@@ -1,5 +1,6 @@
 package org.example.backendjava.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,14 @@ public class LoggingAspect {
     private static final String CYAN = "\u001B[36m";
     private static final String YELLOW = "\u001B[33m";
 
+    // ЧУВСТВИТЕЛЬНЫЕ КЛЮЧИ/ЗНАЧЕНИЯ ДЛЯ МАСКИРОВАНИЯ ---
+    private static final List<String> SENSITIVE_FIELDS = List.of(
+            "accessToken", "refreshToken", "password"
+    );
+    private static final String AUTHORIZATION_HEADER_REGEX = "(?i)(bearer\\s+[\\w.-]+)";
+    private static final String REPLACEMENT_MASK = "*******";
+
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     public LoggingAspect() {
@@ -55,8 +64,19 @@ public class LoggingAspect {
 
         if (args.length > 0) {
             String argsString = Arrays.stream(args)
-                    .map(Object::toString)
+                    .map(arg -> {
+                        try {
+                            // Сериализуем аргумент в JSON для поиска ключей
+                            String json = mapper.writeValueAsString(arg);
+                            // Применяем маскирование к JSON-строке аргумента
+                            return maskSensitiveData(json);
+                        } catch (JsonProcessingException e) {
+                            // Если не удалось сериализовать, возвращаем toString() (и его тоже маскируем)
+                            return maskSensitiveData(arg.toString());
+                        }
+                    })
                     .collect(Collectors.joining(", "));
+
             reqLog.append("Arguments:  ").append(argsString).append("\n");
         } else {
             reqLog.append("Arguments:  No arguments\n");
@@ -96,29 +116,27 @@ public class LoggingAspect {
             int size = collection.size();
             respLog.append("Result Type: List (Total: ").append(size).append(")\n");
 
-            // Берем первые 10 элементов
             List<?> limitedList = collection.stream().limit(10).toList();
 
-            // --- ЛОГИКА ОКРАШИВАНИЯ СПИСКА ---
+            // --- ЛОГИКА ОКРАШИВАНИЯ И МАСКИРОВАНИЯ СПИСКА ---
             try {
                 respLog.append("Data (First 10):\n[\n");
 
                 List<String> jsonItems = new ArrayList<>();
 
                 for (Object item : limitedList) {
-                    // Превращаем отдельный элемент в JSON
                     String itemJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(item);
 
-                    // Если JSON содержит слово "ERROR" (регистрозависимо), красим в КРАСНЫЙ
-                    // Иначе оставляем стандартный цвет (или можно явно задать зеленый)
-                    if (itemJson.contains("ERROR")) {
-                        jsonItems.add(RED + itemJson + GREEN); // Возвращаем зеленый цвет после красного блока
+                    // Применяем маскирование к JSON-строке элемента коллекции
+                    String maskedItemJson = maskSensitiveData(itemJson);
+
+                    if (maskedItemJson.contains("ERROR")) {
+                        jsonItems.add(RED + maskedItemJson + GREEN);
                     } else {
-                        jsonItems.add(itemJson);
+                        jsonItems.add(maskedItemJson);
                     }
                 }
 
-                // Собираем всё обратно через запятую
                 respLog.append(String.join(",\n", jsonItems));
                 respLog.append("\n]");
 
@@ -133,7 +151,9 @@ public class LoggingAspect {
         } else if (body != null) {
             try {
                 String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(body);
-                respLog.append("Result:\n").append(prettyJson);
+                // Применяем маскирование к JSON-строке ответа
+                String maskedPrettyJson = maskSensitiveData(prettyJson);
+                respLog.append("Result:\n").append(maskedPrettyJson);
             } catch (Exception e) {
                 respLog.append("Result:     ").append(body);
             }
@@ -145,6 +165,34 @@ public class LoggingAspect {
         respLog.append("\n\n\n");
 
         log.info(respLog.toString());
+
+        return result;
+    }
+
+    /**
+     * Утилитарный метод для маскирования чувствительных данных в строке (JSON или toString()).
+     * Он ищет ключи из SENSITIVE_FIELDS и токены Bearer.
+     * @param input Строка (обычно JSON) для маскирования.
+     * @return Маскированная строка.
+     */
+    private String maskSensitiveData(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        String result = input;
+
+        // 1. Маскирование значений по чувствительным ключам (например, "password": "value")
+        for (String field : SENSITIVE_FIELDS) {
+            // Регулярное выражение для поиска "ключ": "значение" (с учетом возможных пробелов)
+            // Ищет: (",field"\s*:\s*")([^"]*)("), где $2 - это значение, которое нужно заменить.
+            String regex = "(\"" + field + "\"\\s*:\\s*\")([^\"]*)(\")";
+            result = result.replaceAll(regex, "$1" + REPLACEMENT_MASK + "$3");
+        }
+
+        // 2. Маскирование заголовка Authorization: Bearer
+        // Ищет "bearer [токен]" (регистронезависимо) и заменяет токен на маску.
+        result = result.replaceAll(AUTHORIZATION_HEADER_REGEX, "Bearer " + REPLACEMENT_MASK);
 
         return result;
     }
