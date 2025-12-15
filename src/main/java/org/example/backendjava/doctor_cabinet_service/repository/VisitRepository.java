@@ -7,9 +7,7 @@ import java.util.List;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
 
-    List<Visit> findByDoctorId(Long doctorId);
+    List<Visit> findAllByDoctor_Id(Long doctorId);
 
-    List<Visit> findByPatientId(Long patientId);
-
-    List<Visit> findByDoctorIdAndPatientId(Long doctorId, Long patientId);
+    List<Visit> findAllByPatient_Id(Long patientId);
 }

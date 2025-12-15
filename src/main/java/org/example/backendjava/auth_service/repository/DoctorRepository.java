@@ -19,5 +19,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
      */
     Optional<Doctor> findByUserId(Long userId);
 
+    Optional<Doctor> findById(Long id);
+
     Long user(User user);
 }

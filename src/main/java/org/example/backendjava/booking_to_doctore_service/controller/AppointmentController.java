@@ -77,4 +77,9 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.getAppointmentsByDateForCurrentDoctor(dateTime));
     }
 
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<DoctorResponseDto> getDoctorAppointments(@PathVariable Long doctorId) {
+        return ResponseEntity.ok(doctorService.findDoctorById(doctorId));
+    }
+
 }
