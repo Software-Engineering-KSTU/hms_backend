@@ -22,4 +22,4 @@ minio:
   url: http://localhost:9000
   access-key: minioadmin
   secret-key: minioadmin
-  bucket: doctor-photos
+  bucket: doctors-photo

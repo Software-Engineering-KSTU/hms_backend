@@ -13,6 +13,9 @@ public class MinioService {
 
     private final MinioClient minioClient;
 
+    @Value("${minio.bucket}")
+    private String bucket;
+
     @PostConstruct
     public void initBucket() {
         try {
@@ -28,6 +31,8 @@ public class MinioService {
                                 .bucket(bucket)
                                 .build()
                 );
+
+                setPublicReadPolicy(bucket);
             }
 
         } catch (Exception e) {
@@ -35,9 +40,28 @@ public class MinioService {
         }
     }
 
+    private void setPublicReadPolicy(String bucket) throws Exception {
+        String policy = """
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Principal": "*",
+                  "Action": ["s3:GetObject"],
+                  "Resource": ["arn:aws:s3:::%s/*"]
+                }
+              ]
+            }
+            """.formatted(bucket);
 
-    @Value("${minio.bucket}")
-    private String bucket;
+        minioClient.setBucketPolicy(
+                SetBucketPolicyArgs.builder()
+                        .bucket(bucket)
+                        .config(policy)
+                        .build()
+        );
+    }
 
     public String upload(MultipartFile file, String objectName) {
         try {
