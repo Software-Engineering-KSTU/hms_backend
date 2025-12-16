@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "doctors")
@@ -27,6 +29,22 @@ public class Doctor {
     private String specialization;
     private String phoneNumber;
     private LocalDate birthDate;
-    @OneToOne(mappedBy = "doctor")
+
+    /**
+     * Каскадное удаление: при удалении врача удаляется его резюме.
+     */
+    @OneToOne(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private DoctorResume resume;
+
+    /**
+     * Каскадное удаление: при удалении врача удаляются все его записи с пациентами.
+     */
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<org.example.backendjava.booking_to_doctore_service.model.entity.Appointment> appointments = new ArrayList<>();
+
+    /**
+     * Каскадное удаление: при удалении врача удаляются все его визиты.
+     */
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<org.example.backendjava.doctor_cabinet_service.model.entity.Visit> visits = new ArrayList<>();
 }
