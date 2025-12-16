@@ -57,6 +57,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/cards/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/blocking/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/auth/doctor-register").hasAuthority(Role.ADMIN.name())
+                        .requestMatchers("/api/admin/users/**").hasAuthority(Role.ADMIN.name())
                         .requestMatchers("/api/cards/blocking/request").authenticated()
                         .requestMatchers("/api/transactions/**").authenticated()
                         .requestMatchers("/api/cards/my/**").authenticated()
