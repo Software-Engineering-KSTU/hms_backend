@@ -23,4 +23,3 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket: doctors-photo
-  enabled: true
