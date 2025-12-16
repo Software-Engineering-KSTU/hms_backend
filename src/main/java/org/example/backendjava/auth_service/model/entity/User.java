@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -35,6 +36,23 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    /**
+     * Флаг блокировки пользователя.
+     */
+    @Column(nullable = false)
+    private boolean isBlocked = false;
+
+    /**
+     * Дата и время блокировки.
+     */
+    private LocalDateTime blockedAt;
+
+    /**
+     * Причина блокировки.
+     */
+    @Column(length = 500)
+    private String blockReason;
+
     @OneToOne
     @JoinColumn(name = "patient_id")
     private transient Patient patient;
@@ -57,9 +75,12 @@ public class User implements UserDetails {
         return true;
     }
 
+    /**
+     * Возвращает true, если аккаунт активен (не заблокирован).
+     */
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isBlocked;
     }
 
     @Override
