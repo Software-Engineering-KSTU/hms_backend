@@ -11,7 +11,7 @@ spring:
     hibernate:
       ddl-auto: ${JPA_HIBERNATE_DDL_AUTO:update}
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:8081}
 security:
   jwt:
     secret-key: bb881451354ad90b161deb433b52a964ec4cd34db010d24f3e116136ab734e8a
@@ -23,3 +23,4 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin
   bucket: doctors-photo
+  enabled: true
