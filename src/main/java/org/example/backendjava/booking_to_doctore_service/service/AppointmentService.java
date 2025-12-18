@@ -1,6 +1,7 @@
 package org.example.backendjava.booking_to_doctore_service.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j; // <--- 1. Добавил импорт для логов
 import org.example.backendjava.auth_service.model.entity.Doctor;
 import org.example.backendjava.auth_service.model.entity.Patient;
 import org.example.backendjava.auth_service.model.entity.User;
@@ -26,13 +27,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j // <--- 2. Включаем логирование Lombok
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
-//
+
     private final AppointmentRepository appointmentRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
@@ -50,8 +53,12 @@ public class AppointmentService {
         Patient patient = patientRepository.findByUserId(userId)
                 .orElseThrow(() -> new PatientNotFoundException("Patient with user id: " + userId + " not found"));
 
-        if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), dto.getDateTime())) {
-            throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + dto.getDateTime());
+
+        LocalDateTime appointmentDateTime = LocalDateTime.of(dto.getDate(), dto.getTime());
+
+
+        if (appointmentRepository.existsByDoctorIdAndDateTime(dto.getDoctorId(), appointmentDateTime)) {
+            throw new DoctorAlreadyBookedException("Doctor is already booked at this time: " + appointmentDateTime);
         }
 
         CurrentPatientStatus status = new CurrentPatientStatus();
@@ -62,7 +69,7 @@ public class AppointmentService {
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        appointment.setDateTime(dto.getDateTime());
+        appointment.setDateTime(appointmentDateTime); // Сохраняем склеенное время
         appointment.setCurrentPatientStatus(status);
 
         return appointmentRepository.save(appointment);
@@ -134,7 +141,6 @@ public class AppointmentService {
         return doctor.getId();
     }
 
-
     public List<SlotDto> getCurrentStatusOfDates(Long doctorId) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username)
@@ -148,7 +154,14 @@ public class AppointmentService {
         List<SlotDto> dates = new ArrayList<>();
 
         for (Appointment appointment : appointments) {
+            // Добавил проверку на битую дату и здесь тоже
+            if (appointment.getDateTime() == null) {
+                log.warn("getCurrentStatusOfDates: Skipping corrupted appointment (Date is missing). ID: {}", appointment.getId());
+                continue;
+            }
+
             if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
+                log.warn("getCurrentStatusOfDates: Skipping corrupted appointment (Status is missing). ID: {}", appointment.getId());
                 continue;
             }
 
@@ -176,43 +189,32 @@ public class AppointmentService {
         List<SlotDto> dates = new ArrayList<>();
 
         for (Appointment appointment : appointments) {
-            // --- ПРОВЕРКА 1: Если даты вообще нет (битая запись) ---
-        if (appointment.getDateTime() == null) {
-            // Создаем слот с ошибкой
-            SlotDto errorSlot = new SlotDto();
-            errorSlot.setDateTime(null); // Даты нет
-            // Пишем в статус, что запись сломана, и добавляем ID для отладки
-            errorSlot.setBusyStatus("ERROR: Date is missing (ID: " + appointment.getId() + ")");
-            dates.add(errorSlot);
-            continue; // Идем к следующей записи
+            // --- ИСПРАВЛЕНИЕ: Логируем и пропускаем битую запись ---
+            if (appointment.getDateTime() == null) {
+                log.error("CRITICAL DATA ERROR: Appointment ID {} has NULL DateTime. Skipping.", appointment.getId());
+                continue; // Просто идем дальше, не ломая ответ для фронта
+            }
+
+            // Фильтр по дате
+            if (!appointment.getDateTime().toLocalDate().equals(dto.getDate())) {
+                continue;
+            }
+
+            // --- ИСПРАВЛЕНИЕ: Логируем и пропускаем запись без статуса ---
+            if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
+                log.error("CRITICAL DATA ERROR: Appointment ID {} has NULL Status. Skipping.", appointment.getId());
+                continue;
+            }
+
+            // --- Нормальная обработка ---
+            AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
+
+            if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
+                String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
+                dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
+            }
         }
-
-        // --- ПРОВЕРКА 2: Фильтр по дате (если дата есть, но не та, что просили) ---
-        if (!appointment.getDateTime().toLocalDate().equals(dto.getDate())) {
-            continue; // Просто пропускаем, это не ошибка, а другой день
-        }
-
-        // --- ПРОВЕРКА 3: Если нет статуса пациента (битая запись) ---
-        if (appointment.getCurrentPatientStatus() == null || appointment.getCurrentPatientStatus().getStatus() == null) {
-            SlotDto errorSlot = new SlotDto();
-            errorSlot.setDateTime(appointment.getDateTime());
-            errorSlot.setBusyStatus("ERROR: Status is missing (ID: " + appointment.getId() + ")");
-            dates.add(errorSlot);
-            continue;
-        }
-
-        // --- НОРМАЛЬНАЯ ОБРАБОТКА ---
-        AppointmentStatus status = appointment.getCurrentPatientStatus().getStatus();
-
-        if (status == AppointmentStatus.SCHEDULED || status == AppointmentStatus.IN_PROGRESS) {
-            String slotStatus = appointment.getPatient().getId().equals(patient.getId()) ? "mine" : "other";
-            dates.add(new SlotDto(appointment.getDateTime(), slotStatus));
-        }
-    }
-
 
         return dates;
     }
-
-
 }
