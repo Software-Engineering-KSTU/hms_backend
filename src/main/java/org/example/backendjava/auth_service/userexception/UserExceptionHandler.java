@@ -77,26 +77,6 @@ public class UserExceptionHandler {
     }
 
     /**
-     * Обрабатывает ошибку, если пользователь не найден.
-     */
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
-        log.warn("User not found: {}", ex.getMessage());
-        Map<String, Object> response = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
-    /**
-     * Обрабатывает ошибки с токенами сброса пароля.
-     */
-    @ExceptionHandler({InvalidTokenException.class, TokenExpiredException.class, TokenAlreadyUsedException.class})
-    public ResponseEntity<Map<String, Object>> handlePasswordResetTokenExceptions(RuntimeException ex) {
-        log.warn("Password reset token error: {}", ex.getMessage());
-        Map<String, Object> response = createErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
-    /**
      * Обрабатывает общие непредвиденные ошибки.
      */
     @ExceptionHandler(Exception.class)
@@ -104,5 +84,15 @@ public class UserExceptionHandler {
         log.error("Unexpected error: {}", ex.getMessage(), ex);
         Map<String, Object> response = createErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    /**
+     * Обрабатывает ошибку, если пользователь не найден.
+     */
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
+        log.warn("User not found: {}", ex.getMessage());
+        Map<String, Object> response = createErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }
